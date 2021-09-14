@@ -7,7 +7,7 @@ const expressip = require('express-ip');
 const useragent = require('express-useragent');
 const fileUpload = require('express-fileupload');
 
-module.exports = function ({}) {
+module.exports = function ({ WhatsappRoutes }) {
     const router = Router();
     const apiRoute = Router();
 
@@ -19,8 +19,8 @@ module.exports = function ({}) {
     apiRoute.use(expressip().getIpInfoMiddleware)
     apiRoute.use(useragent.express())
     apiRoute.use(fileUpload({
-        useTempFiles : true,
-        tempFileDir : '/tmp/'
+        useTempFiles: true,
+        tempFileDir: '/tmp/'
     }));
 
     apiRoute.use(function (req, res, next) {
@@ -33,6 +33,7 @@ module.exports = function ({}) {
         next();
     });
 
+    apiRoute.use("/whatsapp", WhatsappRoutes);
     router.use("/api", apiRoute);
 
     return router;

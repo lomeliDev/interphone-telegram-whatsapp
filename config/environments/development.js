@@ -3,6 +3,7 @@ module.exports = {
     PORT_API: process.env.PORT_API,
     DEBUG: process.env.DEBUG,
     URL_HOST: process.env.URL_HOST,
+    PATH_LOGOUT: process.env.PATH_LOGOUT,
     PHONE_NUMBER: process.env.PHONE_NUMBER,
     ADMIN_NUMBER_1: process.env.ADMIN_NUMBER_1,
     ADMIN_NUMBER_2: process.env.ADMIN_NUMBER_2,
