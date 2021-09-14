@@ -1,0 +1,42 @@
+{
+  "name": "interfon-whatsapp",
+  "version": "1.0.0",
+  "description": "Interfon using whatsapp and a raspberry pi",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/lomeliDev/interfon-whatsapp.git"
+  },
+  "keywords": [],
+  "author": "Miguel Lomeli <miguel@lomeli.io>",
+  "license": "MIT",
+  "dependencies": {
+    "whatsapp-web.js": "^1.14.1",
+    "awilix": "^4.3.4",
+    "body-parser": "^1.19.0",
+    "compression": "^1.7.4",
+    "cors": "^2.8.5",
+    "crypto": "^1.0.1",
+    "dotenv": "^10.0.0",
+    "express": "^4.17.1",
+    "express-fileupload": "^1.2.1",
+    "express-ip": "^1.0.4",
+    "express-public-ip": "^1.0.1",
+    "express-useragent": "^1.0.15",
+    "express-validator": "^6.12.0",
+    "global": "^4.4.0",
+    "jwt-simple": "^0.5.6",
+    "moment": "^2.29.1",
+    "node-cron": "^3.0.0",
+    "node-fetch": "^2.6.1",
+    "nodemailer": "^6.6.3",
+    "nodemailer-express-handlebars": "^4.0.0",
+    "nodemon": "^2.0.12",
+    "request": "^2.88.2",
+    "structure": "^2.0.1",
+    "uuid": "^8.3.2"
+  }
+}
