@@ -12,7 +12,7 @@ class Server {
         return new Promise((resolve, reject) => {
             const http = this._express.listen(this._config.PORT_API, () => {
                 const { port } = http.address();
-                console.log("Application running on port " + port);
+                console.log(`Application running on port ${port} with the single worker ${process.pid}`)
                 resolve();
             });
         });
