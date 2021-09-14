@@ -14,7 +14,6 @@
   "author": "Miguel Lomeli <miguel@lomeli.io>",
   "license": "MIT",
   "dependencies": {
-    "whatsapp-web.js": "^1.14.1",
     "awilix": "^4.3.4",
     "body-parser": "^1.19.0",
     "compression": "^1.7.4",
@@ -36,7 +35,9 @@
     "nodemailer-express-handlebars": "^4.0.0",
     "nodemon": "^2.0.12",
     "request": "^2.88.2",
+    "shell-exec": "^1.0.2",
     "structure": "^2.0.1",
-    "uuid": "^8.3.2"
+    "uuid": "^8.3.2",
+    "whatsapp-web.js": "^1.14.1"
   }
 }

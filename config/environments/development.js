@@ -8,4 +8,6 @@ module.exports = {
     ADMIN_NUMBER_1: process.env.ADMIN_NUMBER_1,
     ADMIN_NUMBER_2: process.env.ADMIN_NUMBER_2,
     ADMIN_NUMBER_3: process.env.ADMIN_NUMBER_3,
+    WELCOME_STATUS_WHATSAPP: process.env.WELCOME_STATUS_WHATSAPP,
+    AUDIO_AUTOPLAY_WHATSAPP: process.env.AUDIO_AUTOPLAY_WHATSAPP,
 };

@@ -2,6 +2,7 @@
 
 const fs = require('fs');
 const { Client } = require('whatsapp-web.js');
+const shellExec = require('shell-exec');
 
 class WhatsappController {
 
@@ -139,12 +140,86 @@ class WhatsappController {
         }
     }
 
+    async openDoor(from, body) {
+        console.log("openDoor");
+        this.client.sendMessage(from, body);
+    }
+
+    async openGarage(from, body) {
+        console.log("openGarage");
+        this.client.sendMessage(from, body);
+    }
+
+    async onAlarm(from, body) {
+        console.log("onAlarm");
+        this.client.sendMessage(from, body);
+    }
+
+    async offAlarm(from, body) {
+        console.log("offAlarm");
+        this.client.sendMessage(from, body);
+    }
+
+    async call(from, body) {
+        console.log("call");
+        this.client.sendMessage(from, body);
+    }
+
+    async picture(from, body) {
+        console.log("picture");
+        this.client.sendMessage(from, body);
+    }
+
+    async video(from, body) {
+        console.log("video");
+        this.client.sendMessage(from, body);
+    }
+
     app() {
         try {
             if (this.auth) {
                 this._log.log("Ready to interact with whatsapp");
-                this.welcome();
-
+                if (this._config.WELCOME_STATUS_WHATSAPP === true || this._config.WELCOME_STATUS_WHATSAPP === 'true') {
+                    this.welcome();
+                }
+                const c = this._config;
+                this.client.on('message', async (msg) => {
+                    if (msg.from.indexOf(c.ADMIN_NUMBER_1) >= 0 || msg.from.indexOf(c.ADMIN_NUMBER_2) >= 0 || msg.from.indexOf(c.ADMIN_NUMBER_3) >= 0) {
+                        if (!msg.hasMedia) {
+                            if (msg.body === '🚪') {
+                                this.openDoor(msg.from, msg.body);
+                            } else if (msg.body === '🚗') {
+                                this.openGarage(msg.from, msg.body);
+                            } else if (msg.body === '🔔') {
+                                this.onAlarm(msg.from, msg.body);
+                            } else if (msg.body === '🔕') {
+                                this.offAlarm(msg.from, msg.body);
+                            } else if (msg.body === '📞') {
+                                this.call(msg.from, msg.body);
+                            } else if (msg.body === '📷') {
+                                this.picture(msg.from, msg.body);
+                            } else if (msg.body === '🎥') {
+                                this.video(msg.from, msg.body);
+                            }
+                        } else {
+                            if (msg.type === 'ptt') {
+                                const attachmentData = await msg.downloadMedia();
+                                const pathFileVoice = __dirname + '/../../data/voice.ogg';
+                                const _this = this;
+                                fs.writeFile(pathFileVoice, attachmentData.data, 'base64', function (err) {
+                                    if (err != null) {
+                                        this._log.log(err);
+                                    } else {
+                                        _this.client.sendMessage(msg.from, '🎵');
+                                        if (_this._config.AUDIO_AUTOPLAY_WHATSAPP === true || _this._config.AUDIO_AUTOPLAY_WHATSAPP === 'true') {
+                                            shellExec('omxplayer -o local --vol 500 ' + pathFileVoice);
+                                        }
+                                    }
+                                });
+                            }
+                        }
+                    }
+                });
             } else {
                 this._log.log("You're not online");
             }
