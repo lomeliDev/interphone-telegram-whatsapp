@@ -35,6 +35,7 @@
     "nodemailer": "^6.6.3",
     "nodemailer-express-handlebars": "^4.0.0",
     "nodemon": "^2.0.12",
+    "onoff": "^6.0.3",
     "request": "^2.88.2",
     "shell-exec": "^1.0.2",
     "structure": "^2.0.1",

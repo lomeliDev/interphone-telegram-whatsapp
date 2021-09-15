@@ -18,6 +18,7 @@ const WhatsappRoutes = require("../api/routes/whatsapp.routes");
 const {
     WhatsappController,
     TelegramController,
+    ButtonsController,
 } = require("../api/controllers");
 
 container
@@ -34,6 +35,9 @@ container
     })
     .register({
         TelegramController: asClass(TelegramController).singleton(),
+    })
+    .register({
+        ButtonsController: asClass(ButtonsController).singleton(),
     })
 
 module.exports = container;
