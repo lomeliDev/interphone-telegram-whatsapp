@@ -16,7 +16,6 @@ class ButtonsController {
         this._whats = WhatsappController;
         this.camera = null;
         this.pathPhoto = __dirname + '/../../data/camera.jpg';
-        console.log("ButtonsController");
     }
 
     start() {
@@ -58,9 +57,11 @@ class ButtonsController {
     actionCall() {
         this.call.watch(async (err, value) => {
             if (Date.now() > this.lastCall || this.lastCall == 0) {
-                this.lastCall = Date.now() + (1000 * 1);
-                console.log("si");
+                this.lastCall = Date.now() + (1000 * 10);
                 if (this._config.CAMERA === "native") {
+                    try {
+                        fs.unlinkSync(this.pathPhoto);
+                    } catch (error) { }
                     this.camera.snap().then((result) => {
                         console.log(result);
                     }).catch((error) => {

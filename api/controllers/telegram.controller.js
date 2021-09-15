@@ -35,6 +35,29 @@ class TelegramController {
                     this.Connection();
                     process.once('SIGINT', () => this.client.stop('SIGINT'));
                     process.once('SIGTERM', () => this.client.stop('SIGTERM'));
+
+                    if (this._config.CAMERA === "native") {
+                        this.camera = new PiCamera({
+                            mode: 'photo',
+                            output: this.pathPhoto,
+                            width: 640,
+                            height: 480,
+                            nopreview: true,
+                        });
+                    }
+
+                    if (this._config.CAMERA === "webcam") {
+                        this.camera = NodeWebcam.create({
+                            width: 640,
+                            height: 480,
+                            delay: 0,
+                            quality: 100,
+                            output: "jpeg",
+                            device: false,
+                            callbackReturn: "location",
+                            verbose: false
+                        });
+                    }
                 }
             } catch (error) {
                 this._log.error(error.message);
@@ -91,8 +114,29 @@ class TelegramController {
     }
 
     async picture(ctx, body) {
-        console.log("picture");
         ctx.reply(body);
+        if (this._config.CAMERA === "native") {
+            try {
+                fs.unlinkSync(this.pathPhoto);
+            } catch (error) { }
+            this.camera.snap().then((result) => {
+                console.log(result);
+            }).catch((error) => {
+                console.log("error", error);
+            });
+        }
+        if (this._config.CAMERA === "webcam") {
+            try {
+                fs.unlinkSync(this.pathPhoto);
+            } catch (error) { }
+            setTimeout(() => {
+                this.camera.capture(this.pathPhoto, (err, data) => {
+                    ctx.replyWithPhoto({
+                        source: fs.createReadStream(data)
+                    });
+                });
+            }, 500);
+        }
     }
 
     async video(ctx, body) {

@@ -1,7 +1,7 @@
 'use strict'
 
 const fs = require('fs');
-const { Client } = require('whatsapp-web.js');
+const { Client, MessageMedia } = require('whatsapp-web.js');
 const shellExec = require('shell-exec');
 const PiCamera = require('pi-camera');
 const NodeWebcam = require('node-webcam');
@@ -127,6 +127,29 @@ class WhatsappController {
                 if (this._config.WHATSAPP === true || this._config.WHATSAPP === 'true') {
                     this._log.log("WhatsApp service started");
                     this.Connection();
+
+                    if (this._config.CAMERA === "native") {
+                        this.camera = new PiCamera({
+                            mode: 'photo',
+                            output: this.pathPhoto,
+                            width: 640,
+                            height: 480,
+                            nopreview: true,
+                        });
+                    }
+
+                    if (this._config.CAMERA === "webcam") {
+                        this.camera = NodeWebcam.create({
+                            width: 640,
+                            height: 480,
+                            delay: 0,
+                            quality: 100,
+                            output: "jpeg",
+                            device: false,
+                            callbackReturn: "location",
+                            verbose: false
+                        });
+                    }
                 }
             } catch (error) {
                 this._log.error(error.message);
@@ -185,6 +208,27 @@ class WhatsappController {
     async picture(from, body) {
         console.log("picture");
         this.client.sendMessage(from, body);
+        if (this._config.CAMERA === "native") {
+            try {
+                fs.unlinkSync(this.pathPhoto);
+            } catch (error) { }
+            this.camera.snap().then((result) => {
+                console.log(result);
+            }).catch((error) => {
+                console.log("error", error);
+            });
+        }
+        if (this._config.CAMERA === "webcam") {
+            try {
+                fs.unlinkSync(this.pathPhoto);
+            } catch (error) { }
+            setTimeout(() => {
+                this.camera.capture(this.pathPhoto, (err, data) => {
+                    const media = MessageMedia.fromFilePath(data);
+                    this.client.sendMessage(from, media);
+                });
+            }, 500);
+        }
     }
 
     async video(from, body) {
@@ -278,18 +322,18 @@ class WhatsappController {
                     const media = MessageMedia.fromFilePath(path);
 
                     if (this._config.ADMIN_NUMBER_1 !== undefined && this._config.ADMIN_NUMBER_1 !== "") {
-                        this.client.sendMessage(this._config.ADMIN_NUMBER_1 + "@c.us", Media);
+                        this.client.sendMessage(this._config.ADMIN_NUMBER_1 + "@c.us", media);
                     }
 
                     if (this._config.ADMIN_NUMBER_2 !== undefined && this._config.ADMIN_NUMBER_2 !== "") {
                         if (this._config.ADMIN_NUMBER_1 !== this._config.ADMIN_NUMBER_2) {
-                            this.client.sendMessage(this._config.ADMIN_NUMBER_2 + "@c.us", Media);
+                            this.client.sendMessage(this._config.ADMIN_NUMBER_2 + "@c.us", media);
                         }
                     }
 
                     if (this._config.ADMIN_NUMBER_3 !== undefined && this._config.ADMIN_NUMBER_3 !== "") {
                         if (this._config.ADMIN_NUMBER_1 !== this._config.ADMIN_NUMBER_3 && this._config.ADMIN_NUMBER_2 !== this._config.ADMIN_NUMBER_3) {
-                            this.client.sendMessage(this._config.ADMIN_NUMBER_3 + "@c.us", Media);
+                            this.client.sendMessage(this._config.ADMIN_NUMBER_3 + "@c.us", media);
                         }
                     }
                 }
