@@ -3,6 +3,8 @@
 const fs = require('fs');
 const { Client } = require('whatsapp-web.js');
 const shellExec = require('shell-exec');
+const PiCamera = require('pi-camera');
+const NodeWebcam = require('node-webcam');
 
 class WhatsappController {
 
@@ -13,6 +15,8 @@ class WhatsappController {
         this.auth = false;
         this.sessionData = null;
         this.qr = "";
+        this.camera = null;
+        this.pathPhoto = __dirname + '/../../data/camera.jpg';
         if (fs.existsSync(this.SESSION_FILE_PATH)) {
             this.sessionData = require(this.SESSION_FILE_PATH);
         }
@@ -235,6 +239,60 @@ class WhatsappController {
                 });
             } else {
                 this._log.log("You're not online");
+            }
+        } catch (error) {
+            this._log.error(error.message);
+        }
+    }
+
+    sendMessage(message) {
+        try {
+            if (this._config.WHATSAPP === true || this._config.WHATSAPP === 'true') {
+                if (this.auth) {
+                    if (this._config.ADMIN_NUMBER_1 !== undefined && this._config.ADMIN_NUMBER_1 !== "") {
+                        this.client.sendMessage(this._config.ADMIN_NUMBER_1 + "@c.us", message);
+                    }
+
+                    if (this._config.ADMIN_NUMBER_2 !== undefined && this._config.ADMIN_NUMBER_2 !== "") {
+                        if (this._config.ADMIN_NUMBER_1 !== this._config.ADMIN_NUMBER_2) {
+                            this.client.sendMessage(this._config.ADMIN_NUMBER_2 + "@c.us", message);
+                        }
+                    }
+
+                    if (this._config.ADMIN_NUMBER_3 !== undefined && this._config.ADMIN_NUMBER_3 !== "") {
+                        if (this._config.ADMIN_NUMBER_1 !== this._config.ADMIN_NUMBER_3 && this._config.ADMIN_NUMBER_2 !== this._config.ADMIN_NUMBER_3) {
+                            this.client.sendMessage(this._config.ADMIN_NUMBER_3 + "@c.us", message);
+                        }
+                    }
+                }
+            }
+        } catch (error) {
+            this._log.error(error.message);
+        }
+    }
+
+    sendPhoto(path) {
+        try {
+            if (this._config.WHATSAPP === true || this._config.WHATSAPP === 'true') {
+                if (this.auth) {
+                    const media = MessageMedia.fromFilePath(path);
+
+                    if (this._config.ADMIN_NUMBER_1 !== undefined && this._config.ADMIN_NUMBER_1 !== "") {
+                        this.client.sendMessage(this._config.ADMIN_NUMBER_1 + "@c.us", Media);
+                    }
+
+                    if (this._config.ADMIN_NUMBER_2 !== undefined && this._config.ADMIN_NUMBER_2 !== "") {
+                        if (this._config.ADMIN_NUMBER_1 !== this._config.ADMIN_NUMBER_2) {
+                            this.client.sendMessage(this._config.ADMIN_NUMBER_2 + "@c.us", Media);
+                        }
+                    }
+
+                    if (this._config.ADMIN_NUMBER_3 !== undefined && this._config.ADMIN_NUMBER_3 !== "") {
+                        if (this._config.ADMIN_NUMBER_1 !== this._config.ADMIN_NUMBER_3 && this._config.ADMIN_NUMBER_2 !== this._config.ADMIN_NUMBER_3) {
+                            this.client.sendMessage(this._config.ADMIN_NUMBER_3 + "@c.us", Media);
+                        }
+                    }
+                }
             }
         } catch (error) {
             this._log.error(error.message);

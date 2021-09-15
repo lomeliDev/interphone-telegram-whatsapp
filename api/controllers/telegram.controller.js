@@ -4,6 +4,8 @@ const fs = require('fs');
 const { Telegraf } = require('telegraf');
 const Downloader = require('nodejs-file-downloader');
 const shellExec = require('shell-exec');
+const PiCamera = require('pi-camera');
+const NodeWebcam = require('node-webcam');
 
 class TelegramController {
 
@@ -11,6 +13,8 @@ class TelegramController {
         this._config = config;
         this._log = Log;
         this.client = null;
+        this.camera = null;
+        this.pathPhoto = __dirname + '/../../data/camera.jpg';
     }
 
     Connection() {
@@ -134,6 +138,54 @@ class TelegramController {
                     ctx.reply('*** error ***');
                 })
             });
+        } catch (error) {
+            this._log.error(error.message);
+        }
+    }
+
+    sendMessage(message) {
+        try {
+            if (this._config.TELEGRAM === true || this._config.TELEGRAM === 'true') {
+                if (this._config.ADMIN_USER_TELEGRAM_1 !== undefined && this._config.ADMIN_USER_TELEGRAM_1 !== "") {
+                    this.client.telegram.sendMessage(this._config.ADMIN_USER_TELEGRAM_1, message);
+                }
+
+                if (this._config.ADMIN_USER_TELEGRAM_2 !== undefined && this._config.ADMIN_USER_TELEGRAM_2 !== "") {
+                    if (this._config.ADMIN_USER_TELEGRAM_1 !== this._config.ADMIN_USER_TELEGRAM_2) {
+                        this.client.telegram.sendMessage(this._config.ADMIN_USER_TELEGRAM_2, message);
+                    }
+                }
+
+                if (this._config.ADMIN_USER_TELEGRAM_3 !== undefined && this._config.ADMIN_USER_TELEGRAM_3 !== "") {
+                    if (this._config.ADMIN_USER_TELEGRAM_1 !== this._config.ADMIN_USER_TELEGRAM_3 && this._config.ADMIN_USER_TELEGRAM_2 !== this._config.ADMIN_USER_TELEGRAM_3) {
+                        this.client.telegram.sendMessage(this._config.ADMIN_USER_TELEGRAM_3, message);
+                    }
+                }
+            }
+        } catch (error) {
+            this._log.error(error.message);
+        }
+    }
+
+    sendPhoto(path) {
+        try {
+            if (this._config.TELEGRAM === true || this._config.TELEGRAM === 'true') {
+                if (this._config.ADMIN_USER_TELEGRAM_1 !== undefined && this._config.ADMIN_USER_TELEGRAM_1 !== "") {
+                    this.client.telegram.sendPhoto(this._config.ADMIN_USER_TELEGRAM_1, { source: fs.createReadStream(path) });
+                }
+
+                if (this._config.ADMIN_USER_TELEGRAM_2 !== undefined && this._config.ADMIN_USER_TELEGRAM_2 !== "") {
+                    if (this._config.ADMIN_USER_TELEGRAM_1 !== this._config.ADMIN_USER_TELEGRAM_2) {
+                        this.client.telegram.sendPhoto(this._config.ADMIN_USER_TELEGRAM_2, { source: fs.createReadStream(path) });
+                    }
+                }
+
+                if (this._config.ADMIN_USER_TELEGRAM_3 !== undefined && this._config.ADMIN_USER_TELEGRAM_3 !== "") {
+                    if (this._config.ADMIN_USER_TELEGRAM_1 !== this._config.ADMIN_USER_TELEGRAM_3 && this._config.ADMIN_USER_TELEGRAM_2 !== this._config.ADMIN_USER_TELEGRAM_3) {
+                        this.client.telegram.sendPhoto(this._config.ADMIN_USER_TELEGRAM_3, { source: fs.createReadStream(path) });
+                    }
+                }
+            }
         } catch (error) {
             this._log.error(error.message);
         }

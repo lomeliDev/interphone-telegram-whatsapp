@@ -19,4 +19,5 @@ module.exports = {
     ADMIN_USER_TELEGRAM_1: process.env.ADMIN_USER_TELEGRAM_1,
     ADMIN_USER_TELEGRAM_2: process.env.ADMIN_USER_TELEGRAM_2,
     ADMIN_USER_TELEGRAM_3: process.env.ADMIN_USER_TELEGRAM_3,
+    CAMERA: process.env.CAMERA,
 };
