@@ -3,20 +3,17 @@
 const fs = require('fs');
 const { Client, MessageMedia } = require('whatsapp-web.js');
 const shellExec = require('shell-exec');
-const PiCamera = require('pi-camera');
-const NodeWebcam = require('node-webcam');
 
 class WhatsappController {
 
-    constructor({ config, Log }) {
+    constructor({ config, Log, PhotoController }) {
         this._config = config;
         this._log = Log;
+        this._photo = PhotoController;
         this.SESSION_FILE_PATH = __dirname + '/../../data/session.json';
         this.auth = false;
         this.sessionData = null;
         this.qr = "";
-        this.camera = null;
-        this.pathPhoto = __dirname + '/../../data/camera.jpg';
         if (fs.existsSync(this.SESSION_FILE_PATH)) {
             this.sessionData = require(this.SESSION_FILE_PATH);
         }
@@ -127,29 +124,6 @@ class WhatsappController {
                 if (this._config.WHATSAPP === true || this._config.WHATSAPP === 'true') {
                     this._log.log("WhatsApp service started");
                     this.Connection();
-
-                    if (this._config.CAMERA === "native") {
-                        this.camera = new PiCamera({
-                            mode: 'photo',
-                            output: this.pathPhoto,
-                            width: 640,
-                            height: 480,
-                            nopreview: true,
-                        });
-                    }
-
-                    if (this._config.CAMERA === "webcam") {
-                        this.camera = NodeWebcam.create({
-                            width: 640,
-                            height: 480,
-                            delay: 0,
-                            quality: 100,
-                            output: "jpeg",
-                            device: false,
-                            callbackReturn: "location",
-                            verbose: false
-                        });
-                    }
                 }
             } catch (error) {
                 this._log.error(error.message);
@@ -206,29 +180,13 @@ class WhatsappController {
     }
 
     async picture(from, body) {
-        console.log("picture");
         this.client.sendMessage(from, body);
-        if (this._config.CAMERA === "native") {
-            try {
-                fs.unlinkSync(this.pathPhoto);
-            } catch (error) { }
-            this.camera.snap().then((result) => {
-                console.log(result);
-            }).catch((error) => {
-                console.log("error", error);
-            });
-        }
-        if (this._config.CAMERA === "webcam") {
-            try {
-                fs.unlinkSync(this.pathPhoto);
-            } catch (error) { }
-            setTimeout(() => {
-                this.camera.capture(this.pathPhoto, (err, data) => {
-                    const media = MessageMedia.fromFilePath(data);
-                    this.client.sendMessage(from, media);
-                });
-            }, 500);
-        }
+        this._photo.capture(this.sendPhotoCallback, from, this, null);
+    }
+
+    sendPhotoCallback(path, arg_1, arg_2, arg_3) {
+        const media = MessageMedia.fromFilePath(path);
+        arg_2.client.sendMessage(arg_1, media);
     }
 
     async video(from, body) {
