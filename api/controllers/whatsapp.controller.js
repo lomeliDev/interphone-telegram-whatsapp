@@ -54,7 +54,11 @@ class WhatsappController {
 
     Connection() {
         try {
-            this.client = new Client({ session: this.sessionData });
+            if (this._config.PUPPETEER_WHATSAPP === true || this._config.PUPPETEER_WHATSAPP === 'true') {
+                this.client = new Client({ puppeteer: { headless: true, executablePath: '/usr/bin/chromium-browser', args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-extensions'] }, session: this.sessionData });
+            } else {
+                this.client = new Client({ session: this.sessionData });
+            }
 
             this.client.on('ready', () => {
                 this._log.log('Client is ready!');
@@ -116,7 +120,10 @@ class WhatsappController {
     start() {
         return new Promise((resolve, reject) => {
             try {
-                this.Connection();
+                if (this._config.WHATSAPP === true || this._config.WHATSAPP === 'true') {
+                    this._log.log("WhatsApp service started");
+                    this.Connection();
+                }
             } catch (error) {
                 this._log.error(error.message);
             }
