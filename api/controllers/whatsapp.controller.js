@@ -133,14 +133,20 @@ class WhatsappController {
 
     welcome() {
         try {
-            this.client.sendMessage(this._config.ADMIN_NUMBER_1 + "@c.us", "WhatsApp is listening");
-
-            if (this._config.ADMIN_NUMBER_1 !== this._config.ADMIN_NUMBER_2) {
-                this.client.sendMessage(this._config.ADMIN_NUMBER_2 + "@c.us", "WhatsApp is listening");
+            if (this._config.ADMIN_NUMBER_1 !== undefined && this._config.ADMIN_NUMBER_1 !== "") {
+                this.client.sendMessage(this._config.ADMIN_NUMBER_1 + "@c.us", "WhatsApp is listening");
             }
 
-            if (this._config.ADMIN_NUMBER_1 !== this._config.ADMIN_NUMBER_3 && this._config.ADMIN_NUMBER_2 !== this._config.ADMIN_NUMBER_3) {
-                this.client.sendMessage(this._config.ADMIN_NUMBER_3 + "@c.us", "WhatsApp is listening");
+            if (this._config.ADMIN_NUMBER_2 !== undefined && this._config.ADMIN_NUMBER_2 !== "") {
+                if (this._config.ADMIN_NUMBER_1 !== this._config.ADMIN_NUMBER_2) {
+                    this.client.sendMessage(this._config.ADMIN_NUMBER_2 + "@c.us", "WhatsApp is listening");
+                }
+            }
+
+            if (this._config.ADMIN_NUMBER_3 !== undefined && this._config.ADMIN_NUMBER_3 !== "") {
+                if (this._config.ADMIN_NUMBER_1 !== this._config.ADMIN_NUMBER_3 && this._config.ADMIN_NUMBER_2 !== this._config.ADMIN_NUMBER_3) {
+                    this.client.sendMessage(this._config.ADMIN_NUMBER_3 + "@c.us", "WhatsApp is listening");
+                }
             }
         } catch (error) {
             this._log.error(error.message);
