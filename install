@@ -6,9 +6,11 @@ sudo npm i -g pm2
 sudo npm i -g shell-exec
 sudo npm i -g yarn
 sudo npm i -g nodemon
+sudo modprobe bcm2835-v4l2
 
+sudo apt install python3-pip
+sudo apt install python-pip
 
-sudo apt-get install build-essential -y
-sudo apt-get install cmake git libgtk2.0-dev pkg-config libavcodec-dev libavformat-dev libswscale-dev -y
-sudo apt-get install python-dev python-numpy libtbb2 libtbb-dev libjpeg-dev libpng-dev libtiff-dev libjasper-dev libdc1394-22-dev -y
-sudo apt-get install libopencv-dev -y
+sudo apt-get install libatlas-base-dev libjasper-dev libqtgui4 libqt4-test libhdf5-dev  --yes
+sudo pip3 install -r requirements.txt
+pip3 install opencv-python

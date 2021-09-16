@@ -20,6 +20,7 @@ const {
     TelegramController,
     ButtonsController,
     PhotoController,
+    WssController,
 } = require("../api/controllers");
 
 container
@@ -42,6 +43,7 @@ container
     })
     .register({
         PhotoController: asClass(PhotoController).singleton(),
+        WssController: asClass(WssController).singleton(),
     })
 
 module.exports = container;

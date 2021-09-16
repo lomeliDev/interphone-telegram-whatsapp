@@ -1,6 +1,7 @@
 module.exports = {
     PORT_HTTP: process.env.PORT_HTTP,
     PORT_API: process.env.PORT_API,
+    PORT_STREAMING: process.env.PORT_STREAMING,
     DEBUG: process.env.DEBUG,
     URL_HOST: process.env.URL_HOST,
     PATH_LOGOUT: process.env.PATH_LOGOUT,
@@ -20,4 +21,6 @@ module.exports = {
     ADMIN_USER_TELEGRAM_2: process.env.ADMIN_USER_TELEGRAM_2,
     ADMIN_USER_TELEGRAM_3: process.env.ADMIN_USER_TELEGRAM_3,
     CAMERA: process.env.CAMERA,
+    KEY_STREAMING: process.env.KEY_STREAMING,
+    KEY_READ_STREAMING: process.env.KEY_READ_STREAMING,
 };
