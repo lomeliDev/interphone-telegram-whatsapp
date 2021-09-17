@@ -5,4 +5,5 @@ module.exports = {
     PhotoController: require("./photo.controller"),
     VideoController: require("./video.controller"),
     WssController: require("./wss.controller"),
+    RelaysController: require("./relays.controller"),
 };

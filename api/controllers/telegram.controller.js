@@ -7,11 +7,12 @@ const shellExec = require('shell-exec');
 
 class TelegramController {
 
-    constructor({ config, Log, PhotoController, VideoController }) {
+    constructor({ config, Log, PhotoController, VideoController, RelaysController }) {
         this._config = config;
         this._log = Log;
         this._photo = PhotoController;
         this._video = VideoController;
+        this._relays = RelaysController;
         this.client = null;
     }
 
@@ -64,13 +65,13 @@ class TelegramController {
     }
 
     async openDoor(ctx, body) {
-        console.log("openDoor");
         ctx.reply(body);
+        this._relays.openDoor();
     }
 
     async openGarage(ctx, body) {
-        console.log("openGarage");
         ctx.reply(body);
+        this._relays.openGarage();
     }
 
     async onAlarm(ctx, body) {

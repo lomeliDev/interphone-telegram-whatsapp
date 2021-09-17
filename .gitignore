@@ -33,3 +33,4 @@ debug.log*
 yarn.lock
 data/*
 !data/.gitkeep
+.vscode

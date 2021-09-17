@@ -6,7 +6,7 @@ const Gpio = require('onoff').Gpio;
 
 class ButtonsController {
 
-    constructor({ config, Log, TelegramController, WhatsappController, PhotoController }) {
+    constructor({ config, Log, TelegramController, WhatsappController, PhotoController, RelaysController }) {
         this._config = config;
         this._log = Log;
         this.call = null;
@@ -18,6 +18,7 @@ class ButtonsController {
         this._tg = TelegramController;
         this._whats = WhatsappController;
         this._photo = PhotoController;
+        this._relays = RelaysController;
     }
 
     start() {
@@ -53,6 +54,7 @@ class ButtonsController {
                 this.lastDoor = Date.now() + (1000 * 5);
                 this._tg.sendMessage("🚪");
                 this._whats.sendMessage("🚪");
+                this._relays.openDoor();
             }
         });
     }
@@ -63,6 +65,7 @@ class ButtonsController {
                 this.lastGarage = Date.now() + (1000 * 5);
                 this._tg.sendMessage("🚗");
                 this._whats.sendMessage("🚗");
+                this._relays.openGarage();
             }
         });
     }

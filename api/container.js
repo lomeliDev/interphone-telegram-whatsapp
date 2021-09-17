@@ -22,6 +22,7 @@ const {
     PhotoController,
     VideoController,
     WssController,
+    RelaysController,
 } = require("../api/controllers");
 
 container
@@ -46,6 +47,7 @@ container
         PhotoController: asClass(PhotoController).singleton(),
         VideoController: asClass(VideoController).singleton(),
         WssController: asClass(WssController).singleton(),
+        RelaysController: asClass(RelaysController).singleton(),
     })
 
 module.exports = container;
