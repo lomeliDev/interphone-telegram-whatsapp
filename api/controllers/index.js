@@ -3,5 +3,6 @@ module.exports = {
     TelegramController: require("./telegram.controller"),
     ButtonsController: require("./buttons.controller"),
     PhotoController: require("./photo.controller"),
+    VideoController: require("./video.controller"),
     WssController: require("./wss.controller"),
 };

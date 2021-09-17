@@ -23,7 +23,7 @@ class Stream:
         self.roundsVideo = 0
         self.out = None
         self.pathPhoto = os.getcwd() + "/data/camera.jpg"
-        self.pathVideo = os.getcwd() + "/data/camera.avi"
+        self.pathVideo = os.getcwd() + "/data/camera.mp4"
 
     def getCamera(self):
         idCamera = 999
@@ -134,10 +134,10 @@ class Stream:
                                     if self.roundsVideo == 0:
                                         frame_width = int(self.camera.get(3))
                                         frame_height = int(self.camera.get(4))
-                                        self.out = cv2.VideoWriter(self.pathVideo, cv2.VideoWriter_fourcc('M','J','P','G'), 10, (frame_width,frame_height))
+                                        self.out = cv2.VideoWriter(self.pathVideo, cv2.VideoWriter_fourcc(*'H264'), 20.0, (frame_width,frame_height))
                                     self.roundsVideo += 1
                                     self.out.write(frame)
-                                    if self.roundsVideo >= 100:
+                                    if self.roundsVideo >= 200:
                                         try:
                                             self.out.release()
                                         except:
@@ -164,7 +164,7 @@ class Stream:
                     try:
                         frame_width = int(self.camera.get(3))
                         frame_height = int(self.camera.get(4))
-                        out = cv2.VideoWriter(self.pathVideo, cv2.VideoWriter_fourcc('M','J','P','G'), 10, (frame_width,frame_height))
+                        out = cv2.VideoWriter(self.pathVideo, cv2.VideoWriter_fourcc(*'H264'), 20.0, (frame_width,frame_height))
                         while self.statusVideo == True:
                             success, frame = self.camera.read()
                             if not success:
@@ -172,7 +172,7 @@ class Stream:
                             else:
                                 self.roundsVideo += 1
                                 out.write(frame)
-                                if self.roundsVideo >= 100:
+                                if self.roundsVideo >= 200:
                                     self.clear()
                                     self.statusVideo = False
                         try:

@@ -6,10 +6,11 @@ const shellExec = require('shell-exec');
 
 class WhatsappController {
 
-    constructor({ config, Log, PhotoController }) {
+    constructor({ config, Log, PhotoController, VideoController }) {
         this._config = config;
         this._log = Log;
         this._photo = PhotoController;
+        this._video = VideoController;
         this.SESSION_FILE_PATH = __dirname + '/../../data/session.json';
         this.auth = false;
         this.sessionData = null;
@@ -196,8 +197,19 @@ class WhatsappController {
     }
 
     async video(from, body) {
-        console.log("video");
         this.client.sendMessage(from, body);
+        this._video.capture(this.sendVideoCallback, from, this, null);
+    }
+
+    sendVideoCallback(path, arg_1, arg_2, arg_3) {
+        if (arg_3 === true) {
+            try {
+                const media = MessageMedia.fromFilePath(path);
+                arg_2.client.sendMessage(arg_1, media);
+            } catch (error) { }
+        } else {
+            arg_2.client.sendMessage(arg_1, "Video capture failed");
+        }
     }
 
     app() {

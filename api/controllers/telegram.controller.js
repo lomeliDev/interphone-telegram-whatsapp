@@ -7,10 +7,11 @@ const shellExec = require('shell-exec');
 
 class TelegramController {
 
-    constructor({ config, Log, PhotoController }) {
+    constructor({ config, Log, PhotoController, VideoController }) {
         this._config = config;
         this._log = Log;
         this._photo = PhotoController;
+        this._video = VideoController;
         this.client = null;
     }
 
@@ -105,8 +106,20 @@ class TelegramController {
     }
 
     async video(ctx, body) {
-        console.log("video");
         ctx.reply(body);
+        this._video.capture(this.sendVideoCallback, ctx, null, null);
+    }
+
+    sendVideoCallback(path, arg_1, arg_2, arg_3) {
+        if (arg_3 === true) {
+            try {
+                arg_1.replyWithVideo({
+                    source: fs.createReadStream(path)
+                });
+            } catch (error) { }
+        } else {
+            arg_1.reply("Video capture failed");
+        }
     }
 
     app() {

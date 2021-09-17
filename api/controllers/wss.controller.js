@@ -14,7 +14,7 @@ class WssController {
         this.KEY_STREAMING = config.KEY_STREAMING;
         this.KEY_READ_STREAMING = config.KEY_READ_STREAMING;
         this.pathPhoto = __dirname + '/../../data/camera.jpg';
-        this.pathVideo = __dirname + '/../../data/camera.avi';
+        this.pathVideo = __dirname + '/../../data/camera.mp4';
     }
 
     startPhoto() {
@@ -23,6 +23,18 @@ class WssController {
         } catch (error) { }
         if (this.connectedCamera !== null) {
             this.connectedCamera.send('START_PHOTO');
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    startVideo() {
+        try {
+            fs.unlinkSync(this.pathVideo);
+        } catch (error) { }
+        if (this.connectedCamera !== null) {
+            this.connectedCamera.send('START_VIDEO');
             return true;
         } else {
             return false;

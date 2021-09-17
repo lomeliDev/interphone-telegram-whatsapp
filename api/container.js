@@ -20,6 +20,7 @@ const {
     TelegramController,
     ButtonsController,
     PhotoController,
+    VideoController,
     WssController,
 } = require("../api/controllers");
 
@@ -43,6 +44,7 @@ container
     })
     .register({
         PhotoController: asClass(PhotoController).singleton(),
+        VideoController: asClass(VideoController).singleton(),
         WssController: asClass(WssController).singleton(),
     })
 
