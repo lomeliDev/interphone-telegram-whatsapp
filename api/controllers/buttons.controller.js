@@ -38,8 +38,13 @@ class ButtonsController {
     }
 
     sendPhotoCallback(path, arg_1, arg_2, arg_3) {
-        arg_1._tg.sendPhoto(path);
-        arg_1._whats.sendPhoto(path);
+        if (arg_3 === true) {
+            arg_1._tg.sendPhoto(path);
+            arg_1._whats.sendPhoto(path);
+        } else {
+            arg_1._tg.sendMessage("Image capture failed");
+            arg_1._whats.sendMessage("Image capture failed");
+        }
     }
 
 }

@@ -185,8 +185,14 @@ class WhatsappController {
     }
 
     sendPhotoCallback(path, arg_1, arg_2, arg_3) {
-        const media = MessageMedia.fromFilePath(path);
-        arg_2.client.sendMessage(arg_1, media);
+        if (arg_3 === true) {
+            try {
+                const media = MessageMedia.fromFilePath(path);
+                arg_2.client.sendMessage(arg_1, media);
+            } catch (error) { }
+        } else {
+            arg_2.client.sendMessage(arg_1, "Image capture failed");
+        }
     }
 
     async video(from, body) {

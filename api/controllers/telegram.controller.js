@@ -93,9 +93,15 @@ class TelegramController {
     }
 
     sendPhotoCallback(path, arg_1, arg_2, arg_3) {
-        arg_1.replyWithPhoto({
-            source: fs.createReadStream(path)
-        });
+        if (arg_3 === true) {
+            try {
+                arg_1.replyWithPhoto({
+                    source: fs.createReadStream(path)
+                });
+            } catch (error) { }
+        } else {
+            arg_1.reply("Image capture failed");
+        }
     }
 
     async video(ctx, body) {
