@@ -39,6 +39,7 @@
     "onoff": "^6.0.3",
     "pi-camera": "^1.6.0",
     "request": "^2.88.2",
+    "rpi-gpio-buttons": "^2.0.1",
     "shell-exec": "^1.0.2",
     "structure": "^2.0.1",
     "telegraf": "^4.4.2",
