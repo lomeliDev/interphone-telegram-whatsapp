@@ -2,10 +2,6 @@ const express = require("express");
 const { Router } = require("express");
 const cors = require("cors");
 const compression = require("compression");
-const expressPublicIp = require('express-public-ip');
-const expressip = require('express-ip');
-const useragent = require('express-useragent');
-const fileUpload = require('express-fileupload');
 
 module.exports = function ({ WhatsappRoutes }) {
     const router = Router();
@@ -15,13 +11,6 @@ module.exports = function ({ WhatsappRoutes }) {
     apiRoute.use(compression())
     apiRoute.use(express.json({ limit: '50mb' }))
     apiRoute.use(express.urlencoded({ extended: false, limit: '50mb' }))
-    apiRoute.use(expressPublicIp())
-    apiRoute.use(expressip().getIpInfoMiddleware)
-    apiRoute.use(useragent.express())
-    apiRoute.use(fileUpload({
-        useTempFiles: true,
-        tempFileDir: '/tmp/'
-    }));
 
     apiRoute.use(function (req, res, next) {
         res.setHeader('X-Powered-By', 'Interfon-Whatsapp');
