@@ -1,6 +1,5 @@
 'use strict'
 
-const fs = require('fs');
 const raspberryPiCamera = require('raspberry-pi-camera-native');
 
 class StreamController {
@@ -15,7 +14,7 @@ class StreamController {
             height: 720,
             fps: 16,
             encoding: 'JPEG',
-            quality: 75
+            quality: 35
         };
         this.isOpen = false;
         this.frame = {

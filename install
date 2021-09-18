@@ -3,6 +3,7 @@ sudo apt-get install fonts-liberation libappindicator3-1 libasound2 libatk-bridg
 sudo apt-get install chromium-browser --yes
 sudo apt-get install fswebcam --yes
 sudo apt-get install libatlas-base-dev libjasper-dev libqtgui4 libqt4-test libhdf5-dev --yes
+sudo apt install -y ffmpeg
 sudo npm i -g pm2 
 sudo npm i -g shell-exec
 sudo npm i -g yarn
