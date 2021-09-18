@@ -121,7 +121,7 @@ class TelegramController {
             this._relays.onLight();
             setTimeout(() => {
                 this._relays.offLight();
-            }, 60000);
+            }, 6000);
         }
     }
 

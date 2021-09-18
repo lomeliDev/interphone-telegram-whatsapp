@@ -2,6 +2,7 @@ module.exports = {
     PORT_HTTP: process.env.PORT_HTTP,
     PORT_API: process.env.PORT_API,
     PORT_STREAMING: process.env.PORT_STREAMING,
+    PORT_WSS: process.env.PORT_WSS,
     DEBUG: process.env.DEBUG,
     URL_HOST: process.env.URL_HOST,
     PATH_LOGOUT: process.env.PATH_LOGOUT,

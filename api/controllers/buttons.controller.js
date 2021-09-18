@@ -45,14 +45,14 @@ class ButtonsController {
     actionCall() {
         this.call.watch(async (err, value) => {
             if (Date.now() > this.lastCall || this.lastCall == 0) {
-                this.lastCall = Date.now() + (1000 * 10);
+                this.lastCall = Date.now() + (1000 * 1);
                 this._tg.sendMessage("Ring 🛎️");
                 this._whats.sendMessage("Ring 🛎️");
                 this._photo.capture(this.sendPhotoCallback, this, null, null);
                 this._relays.onLight();
                 setTimeout(() => {
                     this._relays.offLight();
-                }, 60000);
+                }, 6000);
             }
         });
     }

@@ -45,7 +45,7 @@ class WssController {
     start() {
         return new Promise((resolve, reject) => {
             try {
-                this.wsServer = new WebSocket.Server({ port: this._config.PORT_STREAMING }, () => this._log.log(`WS server streaming is listening at ws://0.0.0.0:${this._config.PORT_STREAMING}`));
+                this.wsServer = new WebSocket.Server({ port: this._config.PORT_WSS }, () => this._log.log(`WS server streaming is listening at ws://0.0.0.0:${this._config.PORT_WSS}`));
 
                 this.wsServer.on('connection', (ws, req) => {
 

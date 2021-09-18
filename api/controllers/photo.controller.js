@@ -4,10 +4,10 @@ const fs = require('fs');
 
 class PhotoController {
 
-    constructor({ config, Log, WssController }) {
+    constructor({ config, Log, StreamController }) {
         this._config = config;
         this._log = Log;
-        this._wss = WssController;
+        this._stream = StreamController;
         this.pathPhoto = __dirname + '/../../data/camera.jpg';
     }
 
@@ -22,10 +22,24 @@ class PhotoController {
             try {
                 fs.unlinkSync(this.pathPhoto);
             } catch (error) { }
-            const result = this._wss.startPhoto();
             setTimeout(() => {
-                callback(this.pathPhoto, arg_1, arg_2, result);
-            }, 6000);
+                const result = this._stream.getLastFrame();
+                if (result !== null) {
+                    try {
+                        fs.writeFile(this.pathPhoto, result, (err) => {
+                            if (err) {
+                                callback(this.pathPhoto, arg_1, arg_2, false);
+                            } else {
+                                callback(this.pathPhoto, arg_1, arg_2, true);
+                            }
+                        })
+                    } catch (error) {
+                        callback(this.pathPhoto, arg_1, arg_2, false);
+                    }
+                } else {
+                    callback(this.pathPhoto, arg_1, arg_2, false);
+                }
+            }, 3000);
         }
     }
 

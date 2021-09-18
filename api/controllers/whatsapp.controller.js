@@ -198,7 +198,7 @@ class WhatsappController {
         this._relays.onLight();
         setTimeout(() => {
             this._relays.offLight();
-        }, 60000);
+        }, 6000);
     }
 
     sendPhotoCallback(path, arg_1, arg_2, arg_3) {

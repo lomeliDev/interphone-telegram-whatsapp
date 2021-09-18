@@ -1,11 +1,9 @@
 const { Router } = require("express");
 
-module.exports = function ({ StreamController, config }) {
+module.exports = function ({ StreamController }) {
     const router = Router();
 
-    router.get('/', StreamController.stream.bind(StreamController));
-    // router.get('/status', WhatsappController.status.bind(WhatsappController));
-    // router.get('/' + config.PATH_LOGOUT, WhatsappController.logout.bind(WhatsappController));
+    router.get('/stream.mjpg', StreamController.stream.bind(StreamController));
 
     return router;
 };

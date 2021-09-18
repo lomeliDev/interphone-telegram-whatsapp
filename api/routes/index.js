@@ -6,6 +6,7 @@ const compression = require("compression");
 module.exports = function ({ WhatsappRoutes, StreamRoutes }) {
     const router = Router();
     const apiRoute = Router();
+    const stream = Router();
 
     apiRoute.use(cors())
     apiRoute.use(compression())
@@ -22,9 +23,23 @@ module.exports = function ({ WhatsappRoutes, StreamRoutes }) {
         next();
     });
 
+    stream.use(function (req, res, next) {
+        res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, pre-check=0, post-check=0, max-age=0');
+        res.setHeader('Pragma', 'no-cache');
+        res.setHeader('Connection', 'close');
+        res.setHeader('Content-Type', 'multipart/x-mixed-replace; boundary=--myboundary');
+        res.setHeader('Access-Control-Allow-Origin', '*');
+        res.setHeader('Access-Control-Allow-Headers', 'Authorization, X-API-KEY, Origin , X-Requested-With , Content-Type , Accept , Access-Control-Allow-Request-Method');
+        res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT , DELETE');
+        res.setHeader('Allow', 'GET, POST, OPTIONS, PUT , DELETE');
+        next();
+    });
+
     apiRoute.use("/whatsapp", WhatsappRoutes);
-    apiRoute.use("/stream", StreamRoutes);
+    stream.use("/", StreamRoutes);
     router.use("/api", apiRoute);
+    router.use("/stream", stream);
+    router.use('/', express.static(__dirname + '/../../public/'));
 
     return router;
 };
