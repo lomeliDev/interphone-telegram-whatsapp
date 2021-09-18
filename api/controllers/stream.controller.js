@@ -15,7 +15,7 @@ class StreamController {
             height: 720,
             fps: 16,
             encoding: 'JPEG',
-            quality: 10
+            quality: 75
         };
         this.isOpen = false;
         this.frame = {
