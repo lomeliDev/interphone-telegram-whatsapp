@@ -11,6 +11,7 @@ class RelaysController {
         this._log = Log;
         this.lastDoor = 0;
         this.lastGarage = 0;
+        this.lastLight = 0;
     }
 
     start() {
@@ -41,6 +42,24 @@ class RelaysController {
             relay.write(0);
             setTimeout(() => { this._log.log("open relay garage"); relay.write(1); }, 200);
             setTimeout(() => { this._log.log("close relay garage"); relay.unexport(); }, 500);
+        }
+    }
+
+    onLight() {
+        if (Date.now() > this.lastLight || this.lastLight == 0) {
+            this.lastLight = Date.now() + (1000 * 3);
+            const relay = new Gpio(12, 'high');
+            relay.write(0);
+            setTimeout(() => { this._log.log("close relay light"); relay.unexport(); }, 500);
+        }
+    }
+
+    offLight() {
+        if (Date.now() > this.lastLight || this.lastLight == 0) {
+            this.lastLight = Date.now() + (1000 * 3);
+            const relay = new Gpio(12, 'high');
+            relay.write(1);
+            setTimeout(() => { this._log.log("close relay light"); relay.unexport(); }, 500);
         }
     }
 

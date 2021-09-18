@@ -166,6 +166,16 @@ class WhatsappController {
         this._relays.openGarage();
     }
 
+    async onLight(from, body) {
+        this.client.sendMessage(from, body);
+        this._relays.onLight();
+    }
+
+    async offLight(from, body) {
+        this.client.sendMessage(from, body);
+        this._relays.offLight();
+    }
+
     async onAlarm(from, body) {
         console.log("onAlarm");
         this.client.sendMessage(from, body);
@@ -238,6 +248,10 @@ class WhatsappController {
                                 this.picture(msg.from, msg.body);
                             } else if (msg.body === '🎥') {
                                 this.video(msg.from, msg.body);
+                            } else if (msg.body === '✅') {
+                                this.onLight(msg.from, msg.body);
+                            } else if (msg.body === '❎') {
+                                this.offLight(msg.from, msg.body);
                             }
                         } else {
                             if (msg.type === 'ptt') {

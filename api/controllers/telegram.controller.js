@@ -74,6 +74,16 @@ class TelegramController {
         this._relays.openGarage();
     }
 
+    async onLight(ctx, body) {
+        ctx.reply(body);
+        this._relays.onLight();
+    }
+
+    async offLight(ctx, body) {
+        ctx.reply(body);
+        this._relays.offLight();
+    }
+
     async onAlarm(ctx, body) {
         console.log("onAlarm");
         ctx.reply(body);
@@ -137,7 +147,8 @@ class TelegramController {
             this.client.hears('🔕', (ctx) => this.offAlarm(ctx, '🔕'));
             this.client.hears('📞', (ctx) => this.call(ctx, '📞'));
             this.client.hears('📷', (ctx) => this.picture(ctx, '📷'));
-            this.client.hears('🎥', (ctx) => this.video(ctx, '🎥'));
+            this.client.hears('✅', (ctx) => this.onLight(ctx, '✅'));
+            this.client.hears('❎', (ctx) => this.offLight(ctx, '❎'));
             this.client.on('voice', (ctx) => {
                 ctx.telegram.getFileLink(ctx.message.voice.file_id).then(async (url) => {
                     const downloader = new Downloader({

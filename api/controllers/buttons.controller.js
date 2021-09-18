@@ -15,6 +15,9 @@ class ButtonsController {
         this.lastDoor = 0;
         this.garage = null;
         this.lastGarage = 0;
+        this.light = null;
+        this.lastLight = 0;
+        this.statusLight = false;
         this._tg = TelegramController;
         this._whats = WhatsappController;
         this._photo = PhotoController;
@@ -27,9 +30,11 @@ class ButtonsController {
                 this.call = new Gpio(2, 'in', 'rising', { debounceTimeout: 10 });
                 this.door = new Gpio(3, 'in', 'rising', { debounceTimeout: 10 });
                 this.garage = new Gpio(4, 'in', 'rising', { debounceTimeout: 10 });
+                this.light = new Gpio(5, 'in', 'rising', { debounceTimeout: 10 });
                 this.actionCall();
                 this.actionDoor();
                 this.actionGarage();
+                this.actionLight();
             } catch (error) {
                 this._log.error(error.message);
             }
@@ -66,6 +71,25 @@ class ButtonsController {
                 this._tg.sendMessage("🚗");
                 this._whats.sendMessage("🚗");
                 this._relays.openGarage();
+            }
+        });
+    }
+
+    actionLight() {
+        this.light.watch(async (err, value) => {
+            if (Date.now() > this.lastLight || this.lastLight == 0) {
+                this.lastLight = Date.now() + (1000 * 3);
+                if (!this.statusLight) {
+                    this._tg.sendMessage("✅");
+                    this._whats.sendMessage("✅");
+                    this._relays.onLight();
+                    this.statusLight = true;
+                } else {
+                    this._tg.sendMessage("❎");
+                    this._whats.sendMessage("❎");
+                    this._relays.offLight();
+                    this.statusLight = false;
+                }
             }
         });
     }
