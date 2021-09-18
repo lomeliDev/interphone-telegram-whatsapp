@@ -95,15 +95,15 @@ class TelegramController {
 
     async onAlarm(ctx, body) {
         if (Date.now() > this.lastReceived || this.lastReceived == 0) {
-            console.log("onAlarm");
             ctx.reply(body);
+            this._relays.onAlarm();
         }
     }
 
     async offAlarm(ctx, body) {
         if (Date.now() > this.lastReceived || this.lastReceived == 0) {
             console.log("offAlarm");
-            ctx.reply(body);
+            this._relays.offAlarm();
         }
     }
 

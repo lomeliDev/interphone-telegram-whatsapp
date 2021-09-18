@@ -178,13 +178,13 @@ class WhatsappController {
     }
 
     async onAlarm(from, body) {
-        console.log("onAlarm");
         this.client.sendMessage(from, body);
+        this._relays.onAlarm();
     }
 
     async offAlarm(from, body) {
-        console.log("offAlarm");
         this.client.sendMessage(from, body);
+        this._relays.offAlarm();
     }
 
     async call(from, body) {

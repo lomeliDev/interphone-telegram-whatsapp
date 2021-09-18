@@ -18,6 +18,9 @@ class ButtonsController {
         this.light = null;
         this.lastLight = 0;
         this.statusLight = false;
+        this.alarm = null;
+        this.lastAlarm = 0;
+        this.statusAlarm = false;
         this._tg = TelegramController;
         this._whats = WhatsappController;
         this._photo = PhotoController;
@@ -31,10 +34,12 @@ class ButtonsController {
                 this.door = new Gpio(3, 'in', 'rising', { debounceTimeout: 10 });
                 this.garage = new Gpio(4, 'in', 'rising', { debounceTimeout: 10 });
                 this.light = new Gpio(5, 'in', 'rising', { debounceTimeout: 10 });
+                this.alarm = new Gpio(6, 'in', 'rising', { debounceTimeout: 10 });
                 this.actionCall();
                 this.actionDoor();
                 this.actionGarage();
                 this.actionLight();
+                this.actionAlarm();
             } catch (error) {
                 this._log.error(error.message);
             }
@@ -45,7 +50,7 @@ class ButtonsController {
     actionCall() {
         this.call.watch(async (err, value) => {
             if (Date.now() > this.lastCall || this.lastCall == 0) {
-                this.lastCall = Date.now() + (1000 * 1);
+                this.lastCall = Date.now() + (1000 * 10);
                 this._tg.sendMessage("Ring 🛎️");
                 this._whats.sendMessage("Ring 🛎️");
                 this._photo.capture(this.sendPhotoCallback, this, null, null);
@@ -93,6 +98,25 @@ class ButtonsController {
                     this._whats.sendMessage("❎");
                     this._relays.offLight();
                     this.statusLight = false;
+                }
+            }
+        });
+    }
+
+    actionAlarm() {
+        this.alarm.watch(async (err, value) => {
+            if (Date.now() > this.lastAlarm || this.lastAlarm == 0) {
+                this.lastAlarm = Date.now() + (1000 * 3);
+                if (!this.statusAlarm) {
+                    this._tg.sendMessage("🔔");
+                    this._whats.sendMessage("🔔");
+                    this._relays.onAlarm();
+                    this.statusAlarm = true;
+                } else {
+                    this._tg.sendMessage("🔕");
+                    this._whats.sendMessage("🔕");
+                    this._relays.offAlarm();
+                    this.statusAlarm = false;
                 }
             }
         });
