@@ -49,6 +49,10 @@ class ButtonsController {
                 this._tg.sendMessage("Ring 🛎️");
                 this._whats.sendMessage("Ring 🛎️");
                 this._photo.capture(this.sendPhotoCallback, this, null, null);
+                this._relays.onLight();
+                setTimeout(() => {
+                    this._relays.offLight();
+                }, 60000);
             }
         });
     }

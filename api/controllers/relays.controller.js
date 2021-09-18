@@ -50,7 +50,7 @@ class RelaysController {
             this.lastLight = Date.now() + (1000 * 3);
             const relay = new Gpio(12, 'high');
             relay.write(0);
-            setTimeout(() => { this._log.log("close relay light"); relay.unexport(); }, 500);
+            setTimeout(() => { this._log.log("open relay light"); relay.unexport(); }, 500);
         }
     }
 

@@ -118,6 +118,10 @@ class TelegramController {
         if (Date.now() > this.lastReceived || this.lastReceived == 0) {
             ctx.reply(body);
             this._photo.capture(this.sendPhotoCallback, ctx, null, null);
+            this._relays.onLight();
+            setTimeout(() => {
+                this._relays.offLight();
+            }, 60000);
         }
     }
 
@@ -137,6 +141,10 @@ class TelegramController {
         if (Date.now() > this.lastReceived || this.lastReceived == 0) {
             ctx.reply(body);
             this._video.capture(this.sendVideoCallback, ctx, null, null);
+            this._relays.onLight();
+            setTimeout(() => {
+                this._relays.offLight();
+            }, 60000);
         }
     }
 
@@ -167,6 +175,7 @@ class TelegramController {
             this.client.hears('🔕', (ctx) => this.offAlarm(ctx, '🔕'));
             this.client.hears('📞', (ctx) => this.call(ctx, '📞'));
             this.client.hears('📷', (ctx) => this.picture(ctx, '📷'));
+            this.client.hears('🎥', (ctx) => this.video(ctx, '🎥'));
             this.client.hears('✅', (ctx) => this.onLight(ctx, '✅'));
             this.client.hears('❎', (ctx) => this.offLight(ctx, '❎'));
             this.client.on('voice', (ctx) => {

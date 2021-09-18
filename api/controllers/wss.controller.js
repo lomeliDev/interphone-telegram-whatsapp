@@ -5,9 +5,10 @@ const WebSocket = require('ws');
 
 class WssController {
 
-    constructor({ config, Log }) {
+    constructor({ config, Log, RelaysController }) {
         this._config = config;
         this._log = Log;
+        this._relays = RelaysController;
         this.wsServer = null
         this.connectedClients = [];
         this.connectedCamera = null;
@@ -58,10 +59,12 @@ class WssController {
                                 this._log.log('Connected device');
                                 if (this.connectedCamera !== null) {
                                     this.connectedCamera.send('START_STREAM');
+                                    this._relays.onLight();
                                 }
                             } else if (data === 'STOP_STREAM|' + this.KEY_READ_STREAMING) {
                                 if (this.connectedCamera !== null) {
                                     this.connectedCamera.send('STOP_STREAM');
+                                    this._relays.offLight();
                                 }
                             } else if (data === 'START_PHOTO|' + this.KEY_READ_STREAMING) {
                                 try {
@@ -118,6 +121,7 @@ class WssController {
             });
             if (this.connectedClients.length === 0 && this.connectedCamera !== null) {
                 this.connectedCamera.send('STOP_STREAM');
+                this._relays.offLight();
             }
         } catch (error) {
             this._log.error(error.message);
