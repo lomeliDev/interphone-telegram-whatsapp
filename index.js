@@ -6,6 +6,7 @@ const Buttons = container.resolve("ButtonsController");
 const Photo = container.resolve("PhotoController");
 const Wss = container.resolve("WssController");
 const Relays = container.resolve("RelaysController");
+const Stream = container.resolve("StreamController");
 
 application.start()
     .then(async () => {
@@ -15,6 +16,7 @@ application.start()
         await Photo.start();
         await Wss.start();
         await Relays.start();
+        await Stream.start();
     })
     .catch(err => {
         console.log(err);

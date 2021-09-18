@@ -13,6 +13,7 @@ const Log = require("./utils/Log");
 // routes
 const Routes = require("../api/routes");
 const WhatsappRoutes = require("../api/routes/whatsapp.routes");
+const StreamRoutes = require("../api/routes/stream.routes");
 
 // controllers
 const {
@@ -23,6 +24,7 @@ const {
     VideoController,
     WssController,
     RelaysController,
+    StreamController,
 } = require("../api/controllers");
 
 container
@@ -48,6 +50,10 @@ container
         VideoController: asClass(VideoController).singleton(),
         WssController: asClass(WssController).singleton(),
         RelaysController: asClass(RelaysController).singleton(),
+    })
+    .register({
+        StreamController: asClass(StreamController).singleton(),
+        StreamRoutes: asFunction(StreamRoutes).singleton(),
     })
 
 module.exports = container;

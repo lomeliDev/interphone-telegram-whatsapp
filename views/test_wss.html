@@ -3,8 +3,8 @@
     <title>Test WSS</title>
   </head>
   <body>
-    <img src="" />
-    <script>
+    <img src="http://192.168.0.10:5001/api/stream" />
+    <!-- <script>
       const img = document.querySelector("img");
       const WS_URL = "ws://192.168.0.10:5002";
       const ws = new WebSocket(WS_URL);
@@ -15,6 +15,6 @@
       ws.onmessage = (message) => {
         img.src = "data:image/jpeg;base64," + message.data;
       };
-    </script>
+    </script> -->
   </body>
 </html>
