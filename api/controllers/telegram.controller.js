@@ -14,6 +14,7 @@ class TelegramController {
         this._video = VideoController;
         this._relays = RelaysController;
         this.client = null;
+        this.lastReceived = 0;
     }
 
     Connection() {
@@ -65,43 +66,59 @@ class TelegramController {
     }
 
     async openDoor(ctx, body) {
-        ctx.reply(body);
-        this._relays.openDoor();
+        if (Date.now() > this.lastReceived || this.lastReceived == 0) {
+            ctx.reply(body);
+            this._relays.openDoor();
+        }
     }
 
     async openGarage(ctx, body) {
-        ctx.reply(body);
-        this._relays.openGarage();
+        if (Date.now() > this.lastReceived || this.lastReceived == 0) {
+            ctx.reply(body);
+            this._relays.openGarage();
+        }
     }
 
     async onLight(ctx, body) {
-        ctx.reply(body);
-        this._relays.onLight();
+        if (Date.now() > this.lastReceived || this.lastReceived == 0) {
+            ctx.reply(body);
+            this._relays.onLight();
+        }
     }
 
     async offLight(ctx, body) {
-        ctx.reply(body);
-        this._relays.offLight();
+        if (Date.now() > this.lastReceived || this.lastReceived == 0) {
+            ctx.reply(body);
+            this._relays.offLight();
+        }
     }
 
     async onAlarm(ctx, body) {
-        console.log("onAlarm");
-        ctx.reply(body);
+        if (Date.now() > this.lastReceived || this.lastReceived == 0) {
+            console.log("onAlarm");
+            ctx.reply(body);
+        }
     }
 
     async offAlarm(ctx, body) {
-        console.log("offAlarm");
-        ctx.reply(body);
+        if (Date.now() > this.lastReceived || this.lastReceived == 0) {
+            console.log("offAlarm");
+            ctx.reply(body);
+        }
     }
 
     async call(ctx, body) {
-        console.log("call");
-        ctx.reply(body);
+        if (Date.now() > this.lastReceived || this.lastReceived == 0) {
+            console.log("call");
+            ctx.reply(body);
+        }
     }
 
     async picture(ctx, body) {
-        ctx.reply(body);
-        this._photo.capture(this.sendPhotoCallback, ctx, null, null);
+        if (Date.now() > this.lastReceived || this.lastReceived == 0) {
+            ctx.reply(body);
+            this._photo.capture(this.sendPhotoCallback, ctx, null, null);
+        }
     }
 
     sendPhotoCallback(path, arg_1, arg_2, arg_3) {
@@ -117,8 +134,10 @@ class TelegramController {
     }
 
     async video(ctx, body) {
-        ctx.reply(body);
-        this._video.capture(this.sendVideoCallback, ctx, null, null);
+        if (Date.now() > this.lastReceived || this.lastReceived == 0) {
+            ctx.reply(body);
+            this._video.capture(this.sendVideoCallback, ctx, null, null);
+        }
     }
 
     sendVideoCallback(path, arg_1, arg_2, arg_3) {
@@ -139,6 +158,7 @@ class TelegramController {
             if (this._config.WELCOME_STATUS_TELEGRAM === true || this._config.WELCOME_STATUS_TELEGRAM === 'true') {
                 this.welcome();
             }
+            this.lastReceived = Date.now() + (1000 * 5);
             this.client.start((ctx) => ctx.reply('Welcome'));
             this.client.hears('user', (ctx) => ctx.reply(ctx.message.from.id));
             this.client.hears('🚪', (ctx) => this.openDoor(ctx, '🚪'));

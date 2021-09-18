@@ -15,6 +15,7 @@ class WhatsappController {
         this.SESSION_FILE_PATH = __dirname + '/../../data/session.json';
         this.auth = false;
         this.sessionData = null;
+        this.lastReceived = 0;
         this.qr = "";
         if (fs.existsSync(this.SESSION_FILE_PATH)) {
             this.sessionData = require(this.SESSION_FILE_PATH);
@@ -230,44 +231,47 @@ class WhatsappController {
                 if (this._config.WELCOME_STATUS_WHATSAPP === true || this._config.WELCOME_STATUS_WHATSAPP === 'true') {
                     this.welcome();
                 }
+                this.lastReceived = Date.now() + (1000 * 5);
                 const c = this._config;
                 this.client.on('message', async (msg) => {
                     if (msg.from.indexOf(c.ADMIN_NUMBER_1) >= 0 || msg.from.indexOf(c.ADMIN_NUMBER_2) >= 0 || msg.from.indexOf(c.ADMIN_NUMBER_3) >= 0) {
-                        if (!msg.hasMedia) {
-                            if (msg.body === '🚪') {
-                                this.openDoor(msg.from, msg.body);
-                            } else if (msg.body === '🚗') {
-                                this.openGarage(msg.from, msg.body);
-                            } else if (msg.body === '🔔') {
-                                this.onAlarm(msg.from, msg.body);
-                            } else if (msg.body === '🔕') {
-                                this.offAlarm(msg.from, msg.body);
-                            } else if (msg.body === '📞') {
-                                this.call(msg.from, msg.body);
-                            } else if (msg.body === '📷') {
-                                this.picture(msg.from, msg.body);
-                            } else if (msg.body === '🎥') {
-                                this.video(msg.from, msg.body);
-                            } else if (msg.body === '✅') {
-                                this.onLight(msg.from, msg.body);
-                            } else if (msg.body === '❎') {
-                                this.offLight(msg.from, msg.body);
-                            }
-                        } else {
-                            if (msg.type === 'ptt') {
-                                const attachmentData = await msg.downloadMedia();
-                                const pathFileVoice = __dirname + '/../../data/voice.ogg';
-                                const _this = this;
-                                fs.writeFile(pathFileVoice, attachmentData.data, 'base64', function (err) {
-                                    if (err != null) {
-                                        this._log.log(err);
-                                    } else {
-                                        _this.client.sendMessage(msg.from, '🎵');
-                                        if (_this._config.AUDIO_AUTOPLAY_WHATSAPP === true || _this._config.AUDIO_AUTOPLAY_WHATSAPP === 'true') {
-                                            shellExec('omxplayer -o local --vol 500 ' + pathFileVoice);
+                        if (Date.now() > this.lastReceived || this.lastReceived == 0) {
+                            if (!msg.hasMedia) {
+                                if (msg.body === '🚪') {
+                                    this.openDoor(msg.from, msg.body);
+                                } else if (msg.body === '🚗') {
+                                    this.openGarage(msg.from, msg.body);
+                                } else if (msg.body === '🔔') {
+                                    this.onAlarm(msg.from, msg.body);
+                                } else if (msg.body === '🔕') {
+                                    this.offAlarm(msg.from, msg.body);
+                                } else if (msg.body === '📞') {
+                                    this.call(msg.from, msg.body);
+                                } else if (msg.body === '📷') {
+                                    this.picture(msg.from, msg.body);
+                                } else if (msg.body === '🎥') {
+                                    this.video(msg.from, msg.body);
+                                } else if (msg.body === '✅') {
+                                    this.onLight(msg.from, msg.body);
+                                } else if (msg.body === '❎') {
+                                    this.offLight(msg.from, msg.body);
+                                }
+                            } else {
+                                if (msg.type === 'ptt') {
+                                    const attachmentData = await msg.downloadMedia();
+                                    const pathFileVoice = __dirname + '/../../data/voice.ogg';
+                                    const _this = this;
+                                    fs.writeFile(pathFileVoice, attachmentData.data, 'base64', function (err) {
+                                        if (err != null) {
+                                            this._log.log(err);
+                                        } else {
+                                            _this.client.sendMessage(msg.from, '🎵');
+                                            if (_this._config.AUDIO_AUTOPLAY_WHATSAPP === true || _this._config.AUDIO_AUTOPLAY_WHATSAPP === 'true') {
+                                                shellExec('omxplayer -o local --vol 500 ' + pathFileVoice);
+                                            }
                                         }
-                                    }
-                                });
+                                    });
+                                }
                             }
                         }
                     }
