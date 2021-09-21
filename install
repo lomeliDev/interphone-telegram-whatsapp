@@ -14,5 +14,10 @@ sudo npm i -g shell-exec
 sudo npm i -g yarn
 sudo npm i -g nodemon
 sudo modprobe bcm2835-v4l2
+sudo rpi-update
+
+vcgencmd get_camera
+
+raspistill -o test.jpg
 
 #https://www.youtube.com/watch?v=xXoAswjFK5I audio
