@@ -35,3 +35,4 @@ yarn.lock
 data/*
 !data/.gitkeep
 .vscode
+asterisk/sip.cfg

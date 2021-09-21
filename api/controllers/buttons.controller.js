@@ -6,9 +6,10 @@ const Gpio = require('onoff').Gpio;
 
 class ButtonsController {
 
-    constructor({ config, Log, TelegramController, WhatsappController, PhotoController, RelaysController }) {
+    constructor({ config, Log, TelegramController, WhatsappController, PhotoController, RelaysController, pjsuaController }) {
         this._config = config;
         this._log = Log;
+        this._pjsua = pjsuaController;
         this.call = null;
         this.lastCall = 0;
         this.door = null;
@@ -54,6 +55,7 @@ class ButtonsController {
                 this._tg.sendMessage("Ring 🛎️");
                 this._whats.sendMessage("Ring 🛎️");
                 this._photo.capture(this.sendPhotoCallback, this, null, null);
+                this._pjsua.call(this._config.SIP_QUEUE);
                 this._relays.onLight();
                 setTimeout(() => {
                     this._relays.offLight();

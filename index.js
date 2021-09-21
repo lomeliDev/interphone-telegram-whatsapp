@@ -8,6 +8,7 @@ const Wss = container.resolve("WssController");
 const Relays = container.resolve("RelaysController");
 const Stream = container.resolve("StreamController");
 const Video = container.resolve("VideoController");
+const pjsua = container.resolve("pjsuaController");
 
 application.start()
     .then(async () => {
@@ -19,8 +20,9 @@ application.start()
         await Relays.start();
         await Stream.start();
         await Video.start();
+        await pjsua.start();
     })
     .catch(err => {
         console.log(err);
         process.exit();
-    });      
+    });

@@ -6,12 +6,13 @@ const shellExec = require('shell-exec');
 
 class WhatsappController {
 
-    constructor({ config, Log, PhotoController, VideoController, RelaysController }) {
+    constructor({ config, Log, PhotoController, VideoController, RelaysController, pjsuaController }) {
         this._config = config;
         this._log = Log;
         this._photo = PhotoController;
         this._video = VideoController;
         this._relays = RelaysController;
+        this._pjsua = pjsuaController;
         this.SESSION_FILE_PATH = __dirname + '/../../data/session.json';
         this.auth = false;
         this.sessionData = null;
@@ -188,8 +189,19 @@ class WhatsappController {
     }
 
     async call(from, body) {
-        console.log("call");
         this.client.sendMessage(from, body);
+        if (from.indexOf(this._config.ADMIN_NUMBER_1) >= 0) {
+            this._pjsua.call(this._config.SIP_NUMBER_ADMIN_1);
+        } else if (from.indexOf(this._config.ADMIN_NUMBER_2) >= 0) {
+            this._pjsua.call(this._config.SIP_NUMBER_ADMIN_2);
+        } else if (from.indexOf(this._config.ADMIN_NUMBER_3) >= 0) {
+            this._pjsua.call(this._config.SIP_NUMBER_ADMIN_3);
+        }
+    }
+
+    async ringall(from, body) {
+        this.client.sendMessage(from, body);
+        this._pjsua.call(this._config.SIP_QUEUE);
     }
 
     async picture(from, body) {
@@ -255,6 +267,8 @@ class WhatsappController {
                                     this.offAlarm(msg.from, msg.body);
                                 } else if (msg.body === '📞') {
                                     this.call(msg.from, msg.body);
+                                } else if (msg.body === '🛎️') {
+                                    this.ringall(msg.from, msg.body);
                                 } else if (msg.body === '📷') {
                                     this.picture(msg.from, msg.body);
                                 } else if (msg.body === '🎥') {

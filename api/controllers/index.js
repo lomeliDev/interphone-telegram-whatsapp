@@ -7,4 +7,5 @@ module.exports = {
     WssController: require("./wss.controller"),
     RelaysController: require("./relays.controller"),
     StreamController: require("./stream.controller"),
+    pjsuaController: require("./pjsua.controller"),
 };

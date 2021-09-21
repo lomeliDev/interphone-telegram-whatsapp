@@ -7,12 +7,13 @@ const shellExec = require('shell-exec');
 
 class TelegramController {
 
-    constructor({ config, Log, PhotoController, VideoController, RelaysController }) {
+    constructor({ config, Log, PhotoController, VideoController, RelaysController, pjsuaController }) {
         this._config = config;
         this._log = Log;
         this._photo = PhotoController;
         this._video = VideoController;
         this._relays = RelaysController;
+        this._pjsua = pjsuaController;
         this.client = null;
         this.lastReceived = 0;
     }
@@ -102,15 +103,28 @@ class TelegramController {
 
     async offAlarm(ctx, body) {
         if (Date.now() > this.lastReceived || this.lastReceived == 0) {
-            console.log("offAlarm");
+            ctx.reply(body);
             this._relays.offAlarm();
         }
     }
 
     async call(ctx, body) {
         if (Date.now() > this.lastReceived || this.lastReceived == 0) {
-            console.log("call");
             ctx.reply(body);
+            if (ctx.message.from.id + '' === this._config.ADMIN_USER_TELEGRAM_1) {
+                this._pjsua.call(this._config.SIP_NUMBER_ADMIN_1);
+            } else if (ctx.message.from.id + '' === this._config.ADMIN_USER_TELEGRAM_2) {
+                this._pjsua.call(this._config.SIP_NUMBER_ADMIN_2);
+            } else if (ctx.message.from.id + '' === this._config.ADMIN_USER_TELEGRAM_3) {
+                this._pjsua.call(this._config.SIP_NUMBER_ADMIN_3);
+            }
+        }
+    }
+
+    async ringall(ctx, body) {
+        if (Date.now() > this.lastReceived || this.lastReceived == 0) {
+            ctx.reply(body);
+            this._pjsua.call(this._config.SIP_QUEUE);
         }
     }
 
@@ -174,6 +188,7 @@ class TelegramController {
             this.client.hears('🔔', (ctx) => this.onAlarm(ctx, '🔔'));
             this.client.hears('🔕', (ctx) => this.offAlarm(ctx, '🔕'));
             this.client.hears('📞', (ctx) => this.call(ctx, '📞'));
+            this.client.hears('🛎️', (ctx) => this.ringall(ctx, '🛎️'));
             this.client.hears('📷', (ctx) => this.picture(ctx, '📷'));
             this.client.hears('🎥', (ctx) => this.video(ctx, '🎥'));
             this.client.hears('✅', (ctx) => this.onLight(ctx, '✅'));

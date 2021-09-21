@@ -3,6 +3,8 @@ sudo apt-get install fonts-liberation libappindicator3-1 libasound2 libatk-bridg
 sudo apt-get install chromium-browser --yes
 sudo apt-get install fswebcam --yes
 sudo apt-get install libatlas-base-dev libjasper-dev libqtgui4 libqt4-test libhdf5-dev --yes
+sudo apt-get install libasound2-dev --yes
+sudo apt-get install pulseaudio jackd2 alsa-utils dbus-x11 screen --yes
 sudo apt-get install asterisk --yes
 sudo apt-get install asterisk-prompt-es asterisk-core-sounds-es asterisk-core-sounds-es-gsm asterisk-core-sounds-es-wav asterisk-core-sounds-es-g722 asterisk-core-sounds-es-wav --yes
 sudo apt-get install asterisk-core-sounds-en asterisk-core-sounds-en-g722 asterisk-core-sounds-en-gsm asterisk-core-sounds-en-wav --yes
@@ -12,3 +14,5 @@ sudo npm i -g shell-exec
 sudo npm i -g yarn
 sudo npm i -g nodemon
 sudo modprobe bcm2835-v4l2
+
+#https://www.youtube.com/watch?v=xXoAswjFK5I audio

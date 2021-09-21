@@ -24,4 +24,12 @@ module.exports = {
     CAMERA: process.env.CAMERA,
     KEY_STREAMING: process.env.KEY_STREAMING,
     KEY_READ_STREAMING: process.env.KEY_READ_STREAMING,
+    PATH_PJSUA: process.env.PATH_PJSUA,
+    PATH_PJSUA_CONFIG: process.env.PATH_PJSUA_CONFIG,
+    TIMEOUT_PJSUA: process.env.TIMEOUT_PJSUA,
+    SIP_NUMBER: process.env.SIP_NUMBER,
+    SIP_QUEUE: process.env.SIP_QUEUE,
+    SIP_NUMBER_ADMIN_1: process.env.SIP_NUMBER_ADMIN_1,
+    SIP_NUMBER_ADMIN_2: process.env.SIP_NUMBER_ADMIN_2,
+    SIP_NUMBER_ADMIN_3: process.env.SIP_NUMBER_ADMIN_3,
 };

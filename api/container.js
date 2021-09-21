@@ -14,6 +14,7 @@ const Log = require("./utils/Log");
 const Routes = require("../api/routes");
 const WhatsappRoutes = require("../api/routes/whatsapp.routes");
 const StreamRoutes = require("../api/routes/stream.routes");
+const pjsuaRoutes = require("../api/routes/pjsua.routes");
 
 // controllers
 const {
@@ -25,6 +26,7 @@ const {
     WssController,
     RelaysController,
     StreamController,
+    pjsuaController,
 } = require("../api/controllers");
 
 container
@@ -54,6 +56,10 @@ container
     .register({
         StreamController: asClass(StreamController).singleton(),
         StreamRoutes: asFunction(StreamRoutes).singleton(),
+    })
+    .register({
+        pjsuaController: asClass(pjsuaController).singleton(),
+        pjsuaRoutes: asFunction(pjsuaRoutes).singleton(),
     })
 
 module.exports = container;
