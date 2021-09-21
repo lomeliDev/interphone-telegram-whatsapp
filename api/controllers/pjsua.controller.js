@@ -14,16 +14,16 @@ class pjsuaController {
             shellExec('pgrep pjsua | xargs kill');
             setTimeout(() => {
                 shellExec(`screen -S interfon -d -m ${this._config.PATH_PJSUA} --config-file ${this._config.PATH_PJSUA_CONFIG}`);
-            }, 1000);
+            }, 400);
             setTimeout(() => {
                 shellExec(`screen -S interfon -X stuff 'V^M'`);
-            }, 3000);
+            }, 700);
             setTimeout(() => {
                 shellExec(`screen -S interfon -X stuff '5^M'`);
-            }, 4000);
+            }, 800);
             setTimeout(() => {
                 shellExec(`screen -S interfon -X stuff '4^M'`);
-            }, 5000);
+            }, 900);
             resolve();
         });
     }
@@ -36,19 +36,19 @@ class pjsuaController {
                     shellExec('pgrep pjsua | xargs kill');
                     setTimeout(() => {
                         shellExec(`screen -S interfon -d -m ${this._config.PATH_PJSUA} --config-file ${this._config.PATH_PJSUA_CONFIG}`);
-                    }, 100);
+                    }, 400);
                     setTimeout(() => {
                         shellExec(`screen -S interfon -X stuff 'V^M'`);
-                    }, 3000);
+                    }, 600);
                     setTimeout(() => {
                         shellExec(`screen -S interfon -X stuff '5^M'`);
-                    }, 3500);
+                    }, 700);
                     setTimeout(() => {
                         shellExec(`screen -S interfon -X stuff '4^M'`);
-                    }, 3800);
+                    }, 800);
                     setTimeout(() => {
                         resolve();
-                    }, 4800);
+                    }, 900);
                 } else {
                     resolve();
                 }

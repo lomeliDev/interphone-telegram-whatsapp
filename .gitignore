@@ -36,3 +36,4 @@ data/*
 !data/.gitkeep
 .vscode
 asterisk/sip.cfg
+asterisk/sip_test.cfg

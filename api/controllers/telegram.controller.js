@@ -174,6 +174,11 @@ class TelegramController {
         }
     }
 
+    async command(ctx, command) {
+        const result = await shellExec(command);
+        ctx.reply((result.stdout));
+    }
+
     app() {
         try {
             this._log.log("Ready to interact with telegram");
@@ -193,6 +198,9 @@ class TelegramController {
             this.client.hears('🎥', (ctx) => this.video(ctx, '🎥'));
             this.client.hears('✅', (ctx) => this.onLight(ctx, '✅'));
             this.client.hears('❎', (ctx) => this.offLight(ctx, '❎'));
+            this.client.hears('free', (ctx) => this.command(ctx, 'free -h'));
+            this.client.hears('df', (ctx) => this.command(ctx, 'df -h'));
+            this.client.hears('top', (ctx) => this.command(ctx, 'top -b -n 1'));
             this.client.on('voice', (ctx) => {
                 ctx.telegram.getFileLink(ctx.message.voice.file_id).then(async (url) => {
                     const downloader = new Downloader({
@@ -206,6 +214,7 @@ class TelegramController {
                         ctx.reply('🎵');
                         if (this._config.AUDIO_AUTOPLAY_TELEGRAM === true || this._config.AUDIO_AUTOPLAY_TELEGRAM === 'true') {
                             const pathFileVoice = __dirname + '/../../data/voice.oga';
+                            console.log('omxplayer -o local --vol 500 ' + pathFileVoice);
                             shellExec('omxplayer -o local --vol 500 ' + pathFileVoice);
                         }
                     } catch (error) {
