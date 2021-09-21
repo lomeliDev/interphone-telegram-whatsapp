@@ -3,7 +3,7 @@ const { Router } = require("express");
 const cors = require("cors");
 const compression = require("compression");
 
-module.exports = function ({ WhatsappRoutes, StreamRoutes, pjsuaRoutes }) {
+module.exports = function ({ WhatsappRoutes, StreamRoutes, pjsuaRoutes, HttpRoutes }) {
     const router = Router();
     const apiRoute = Router();
     const stream = Router();
@@ -37,6 +37,7 @@ module.exports = function ({ WhatsappRoutes, StreamRoutes, pjsuaRoutes }) {
 
     apiRoute.use("/whatsapp", WhatsappRoutes);
     apiRoute.use("/pjsua", pjsuaRoutes);
+    apiRoute.use("/http", HttpRoutes);
     stream.use("/", StreamRoutes);
     router.use("/api", apiRoute);
     router.use("/stream", stream);

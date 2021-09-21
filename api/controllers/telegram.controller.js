@@ -7,13 +7,14 @@ const shellExec = require('shell-exec');
 
 class TelegramController {
 
-    constructor({ config, Log, PhotoController, VideoController, RelaysController, pjsuaController }) {
+    constructor({ config, Log, PhotoController, VideoController, RelaysController, pjsuaController, ButtonsController }) {
         this._config = config;
         this._log = Log;
         this._photo = PhotoController;
         this._video = VideoController;
         this._relays = RelaysController;
         this._pjsua = pjsuaController;
+        this._buttons = ButtonsController;
         this.client = null;
         this.lastReceived = 0;
     }
@@ -84,6 +85,7 @@ class TelegramController {
         if (Date.now() > this.lastReceived || this.lastReceived == 0) {
             ctx.reply(body);
             this._relays.onLight();
+            this._buttons.statusLight = true;
         }
     }
 
@@ -91,6 +93,7 @@ class TelegramController {
         if (Date.now() > this.lastReceived || this.lastReceived == 0) {
             ctx.reply(body);
             this._relays.offLight();
+            this._buttons.statusLight = false;
         }
     }
 
@@ -98,6 +101,7 @@ class TelegramController {
         if (Date.now() > this.lastReceived || this.lastReceived == 0) {
             ctx.reply(body);
             this._relays.onAlarm();
+            this._buttons.statusAlarm = true;
         }
     }
 
@@ -105,6 +109,7 @@ class TelegramController {
         if (Date.now() > this.lastReceived || this.lastReceived == 0) {
             ctx.reply(body);
             this._relays.offAlarm();
+            this._buttons.statusAlarm = false;
         }
     }
 

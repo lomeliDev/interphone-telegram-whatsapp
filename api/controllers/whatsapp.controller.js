@@ -6,13 +6,14 @@ const shellExec = require('shell-exec');
 
 class WhatsappController {
 
-    constructor({ config, Log, PhotoController, VideoController, RelaysController, pjsuaController }) {
+    constructor({ config, Log, PhotoController, VideoController, RelaysController, pjsuaController, ButtonsController }) {
         this._config = config;
         this._log = Log;
         this._photo = PhotoController;
         this._video = VideoController;
         this._relays = RelaysController;
         this._pjsua = pjsuaController;
+        this._buttons = ButtonsController;
         this.SESSION_FILE_PATH = __dirname + '/../../data/session.json';
         this.auth = false;
         this.sessionData = null;
@@ -171,21 +172,25 @@ class WhatsappController {
     async onLight(from, body) {
         this.client.sendMessage(from, body);
         this._relays.onLight();
+        this._buttons.statusLight = true;
     }
 
     async offLight(from, body) {
         this.client.sendMessage(from, body);
         this._relays.offLight();
+        this._buttons.statusLight = false;
     }
 
     async onAlarm(from, body) {
         this.client.sendMessage(from, body);
         this._relays.onAlarm();
+        this._buttons.statusAlarm = true;
     }
 
     async offAlarm(from, body) {
         this.client.sendMessage(from, body);
         this._relays.offAlarm();
+        this._buttons.statusAlarm = false;
     }
 
     async call(from, body) {

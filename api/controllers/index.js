@@ -8,4 +8,5 @@ module.exports = {
     RelaysController: require("./relays.controller"),
     StreamController: require("./stream.controller"),
     pjsuaController: require("./pjsua.controller"),
+    HttpController: require("./http.controller"),
 };
