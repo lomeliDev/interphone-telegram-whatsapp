@@ -4,6 +4,7 @@ module.exports = {
     PORT_STREAMING: process.env.PORT_STREAMING,
     PORT_WSS: process.env.PORT_WSS,
     DEBUG: process.env.DEBUG,
+    INTERFACE_NETWORK: process.env.INTERFACE_NETWORK,
     URL_HOST: process.env.URL_HOST,
     PATH_LOGOUT: process.env.PATH_LOGOUT,
     PHONE_NUMBER: process.env.PHONE_NUMBER,
@@ -32,4 +33,8 @@ module.exports = {
     SIP_NUMBER_ADMIN_1: process.env.SIP_NUMBER_ADMIN_1,
     SIP_NUMBER_ADMIN_2: process.env.SIP_NUMBER_ADMIN_2,
     SIP_NUMBER_ADMIN_3: process.env.SIP_NUMBER_ADMIN_3,
+    SIP_HOST: process.env.SIP_HOST,
+    SIP_PORT: process.env.SIP_PORT,
+    SIP_USER: process.env.SIP_USER,
+    SIP_PASS: process.env.SIP_PASS,
 };

@@ -29,6 +29,7 @@ const {
     StreamController,
     pjsuaController,
     HttpController,
+    GatewayController,
 } = require("../api/controllers");
 
 container
@@ -64,6 +65,7 @@ container
         pjsuaRoutes: asFunction(pjsuaRoutes).singleton(),
     })
     .register({
+        GatewayController: asClass(GatewayController).singleton(),
         HttpController: asClass(HttpController).singleton(),
         HttpRoutes: asFunction(HttpRoutes).singleton(),
     })

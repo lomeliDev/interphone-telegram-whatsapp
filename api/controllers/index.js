@@ -9,4 +9,5 @@ module.exports = {
     StreamController: require("./stream.controller"),
     pjsuaController: require("./pjsua.controller"),
     HttpController: require("./http.controller"),
+    GatewayController: require("./gateway.controller"),
 };

@@ -1,5 +1,7 @@
 'use strict'
 
+const shellExec = require('shell-exec');
+
 class HttpController {
 
     constructor({ config, Log, ButtonsController, RelaysController, TelegramController, WhatsappController, pjsuaController }) {
@@ -132,6 +134,86 @@ class HttpController {
         try {
             this._pjsua.call(this._config.SIP_QUEUE);
             res.status(200).send({ status: 200, message: 'OK', payload: {} });
+        } catch (error) {
+            res.status(422).send({ status: 422, message: error.message || 'An unexpected error occurred', payload: {} });
+        }
+    }
+
+    Hangup(req, res) {
+        try {
+            this._pjsua.HangUp();
+            res.status(200).send({ status: 200, message: 'OK', payload: {} });
+        } catch (error) {
+            res.status(422).send({ status: 422, message: error.message || 'An unexpected error occurred', payload: {} });
+        }
+    }
+
+    async Details(req, res) {
+        try {
+            const memory_free = await shellExec("free -mh | awk 'FNR == 2 {print $4}'");
+            const memory_used = await shellExec("free -mh | awk 'FNR == 2 {print $3}'");
+            const memory_total = await shellExec("free -mh | awk 'FNR == 2 {print $2}'");
+            const disk = await shellExec("df -h | awk 'FNR == 2 {print $4}'");
+            const cpu = await shellExec("mpstat | awk 'FNR == 4 {print $3}'");
+            const network_rx_value = await shellExec("vnstat -i " + this._config.INTERFACE_NETWORK + " | awk 'FNR == 5 {print $2}'");
+            const network_rx_title = await shellExec("vnstat -i " + this._config.INTERFACE_NETWORK + " | awk 'FNR == 5 {print $3}'");
+            const network_tx_value = await shellExec("vnstat -i " + this._config.INTERFACE_NETWORK + " | awk 'FNR == 5 {print $5}'");
+            const network_tx_title = await shellExec("vnstat -i " + this._config.INTERFACE_NETWORK + " | awk 'FNR == 5 {print $6}'");
+            const network_total_value = await shellExec("vnstat -i " + this._config.INTERFACE_NETWORK + " | awk 'FNR == 5 {print $8}'");
+            const network_total_title = await shellExec("vnstat -i " + this._config.INTERFACE_NETWORK + " | awk 'FNR == 5 {print $9}'");
+            const pjsua = await shellExec("pgrep pjsua");
+            res.status(200).send({
+                status: 200, message: 'OK', payload: {
+                    memory: {
+                        free: memory_free.stdout.replace("\n", ""),
+                        used: memory_used.stdout.replace("\n", ""),
+                        total: memory_total.stdout.replace("\n", ""),
+                    },
+                    network: {
+                        rx: network_rx_value.stdout.replace("\n", "") + network_rx_title.stdout.replace("\n", ""),
+                        tx: network_tx_value.stdout.replace("\n", "") + network_tx_title.stdout.replace("\n", ""),
+                        total: network_total_value.stdout.replace("\n", "") + network_total_title.stdout.replace("\n", ""),
+                    },
+                    disk: disk.stdout.replace("\n", ""),
+                    cpu: cpu.stdout.replace("\n", "%"),
+                    pjsua: pjsua.stdout.replace("\n", ""),
+                }
+            });
+        } catch (error) {
+            res.status(422).send({ status: 422, message: error.message || 'An unexpected error occurred', payload: {} });
+        }
+    }
+
+    yesStatusLight(req, res) {
+        this._buttons.statusLight = true;
+        res.status(200).send({ status: 200, message: 'OK', payload: {} });
+    }
+
+    noStatusLight(req, res) {
+        this._buttons.statusLight = false;
+        res.status(200).send({ status: 200, message: 'OK', payload: {} });
+    }
+
+    yesStatusAlarm(req, res) {
+        this._buttons.statusAlarm = true;
+        res.status(200).send({ status: 200, message: 'OK', payload: {} });
+    }
+
+    noStatusAlarm(req, res) {
+        this._buttons.statusAlarm = false;
+        res.status(200).send({ status: 200, message: 'OK', payload: {} });
+    }
+
+    SIP(req, res) {
+        try {
+            res.status(200).send({
+                status: 200, message: 'OK', payload: {
+                    host: this._config.SIP_HOST,
+                    port: this._config.SIP_PORT,
+                    user: this._config.SIP_USER,
+                    password: this._config.SIP_PASS
+                }
+            });
         } catch (error) {
             res.status(422).send({ status: 422, message: error.message || 'An unexpected error occurred', payload: {} });
         }

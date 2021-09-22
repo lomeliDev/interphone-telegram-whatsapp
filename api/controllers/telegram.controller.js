@@ -7,14 +7,14 @@ const shellExec = require('shell-exec');
 
 class TelegramController {
 
-    constructor({ config, Log, PhotoController, VideoController, RelaysController, pjsuaController, ButtonsController }) {
+    constructor({ config, Log, PhotoController, VideoController, RelaysController, pjsuaController, GatewayController }) {
         this._config = config;
         this._log = Log;
         this._photo = PhotoController;
         this._video = VideoController;
         this._relays = RelaysController;
         this._pjsua = pjsuaController;
-        this._buttons = ButtonsController;
+        this._gateway = GatewayController;
         this.client = null;
         this.lastReceived = 0;
     }
@@ -85,7 +85,7 @@ class TelegramController {
         if (Date.now() > this.lastReceived || this.lastReceived == 0) {
             ctx.reply(body);
             this._relays.onLight();
-            this._buttons.statusLight = true;
+            this._gateway.onLight();
         }
     }
 
@@ -93,7 +93,7 @@ class TelegramController {
         if (Date.now() > this.lastReceived || this.lastReceived == 0) {
             ctx.reply(body);
             this._relays.offLight();
-            this._buttons.statusLight = false;
+            this._gateway.offLight();
         }
     }
 
@@ -101,7 +101,7 @@ class TelegramController {
         if (Date.now() > this.lastReceived || this.lastReceived == 0) {
             ctx.reply(body);
             this._relays.onAlarm();
-            this._buttons.statusAlarm = true;
+            this._gateway.onAlarm();
         }
     }
 
@@ -109,7 +109,7 @@ class TelegramController {
         if (Date.now() > this.lastReceived || this.lastReceived == 0) {
             ctx.reply(body);
             this._relays.offAlarm();
-            this._buttons.statusAlarm = false;
+            this._gateway.offAlarm();
         }
     }
 
@@ -219,11 +219,9 @@ class TelegramController {
                         ctx.reply('🎵');
                         if (this._config.AUDIO_AUTOPLAY_TELEGRAM === true || this._config.AUDIO_AUTOPLAY_TELEGRAM === 'true') {
                             const pathFileVoice = __dirname + '/../../data/voice.oga';
-                            console.log('omxplayer -o local --vol 500 ' + pathFileVoice);
                             shellExec('omxplayer -o local --vol 500 ' + pathFileVoice);
                         }
                     } catch (error) {
-                        console.log(error);
                         ctx.reply('*** error 2 ***');
                     }
                 }).catch((err) => {

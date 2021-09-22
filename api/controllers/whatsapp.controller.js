@@ -6,14 +6,14 @@ const shellExec = require('shell-exec');
 
 class WhatsappController {
 
-    constructor({ config, Log, PhotoController, VideoController, RelaysController, pjsuaController, ButtonsController }) {
+    constructor({ config, Log, PhotoController, VideoController, RelaysController, pjsuaController, GatewayController }) {
         this._config = config;
         this._log = Log;
         this._photo = PhotoController;
         this._video = VideoController;
         this._relays = RelaysController;
         this._pjsua = pjsuaController;
-        this._buttons = ButtonsController;
+        this._gateway = GatewayController;
         this.SESSION_FILE_PATH = __dirname + '/../../data/session.json';
         this.auth = false;
         this.sessionData = null;
@@ -97,7 +97,6 @@ class WhatsappController {
                 this._log.log('Client is authenticated!');
                 if (this.sessionData === null) {
                     this.sessionData = session;
-                    console.log(this.sessionData);
                     fs.writeFile(this.SESSION_FILE_PATH, JSON.stringify(session), (err) => {
                         if (err) {
                             this._log.error(err);
@@ -172,25 +171,25 @@ class WhatsappController {
     async onLight(from, body) {
         this.client.sendMessage(from, body);
         this._relays.onLight();
-        this._buttons.statusLight = true;
+        this._gateway.onLight();
     }
 
     async offLight(from, body) {
         this.client.sendMessage(from, body);
         this._relays.offLight();
-        this._buttons.statusLight = false;
+        this._gateway.offLight();
     }
 
     async onAlarm(from, body) {
         this.client.sendMessage(from, body);
         this._relays.onAlarm();
-        this._buttons.statusAlarm = true;
+        this._gateway.onAlarm();
     }
 
     async offAlarm(from, body) {
         this.client.sendMessage(from, body);
         this._relays.offAlarm();
-        this._buttons.statusAlarm = false;
+        this._gateway.offAlarm();
     }
 
     async call(from, body) {
