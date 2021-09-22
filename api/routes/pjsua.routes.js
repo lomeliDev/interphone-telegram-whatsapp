@@ -6,6 +6,7 @@ module.exports = function ({ pjsuaController }) {
     router.get('/call', pjsuaController.callAll.bind(pjsuaController));
     router.get('/hangup', pjsuaController.HangUpApi.bind(pjsuaController));
     router.get('/close', pjsuaController.closepApi.bind(pjsuaController));
+    router.get('/reload', pjsuaController.reloadApi.bind(pjsuaController));
 
     return router;
 };

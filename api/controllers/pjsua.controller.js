@@ -110,6 +110,18 @@ class pjsuaController {
         }
     }
 
+    async reloadApi(req, res) {
+        try {
+            this.close();
+            setTimeout(async() => {
+                await this.run();    
+            }, 5000);
+            res.status(200).send({ status: 200, message: 'reload OK', payload: {} });
+        } catch (error) {
+            res.status(422).send({ status: 422, message: error.message || 'An unexpected error occurred', payload: {} });
+        }
+    }
+
 }
 
 module.exports = pjsuaController;

@@ -80,12 +80,17 @@ const getStatusLight = (data) => {
 const getStatusAlarm = (data) => {
     statusAlarm = data.status;
     const container = document.getElementById("alarm");
+    const container_2 = document.getElementById("alarm_2");
     if (statusAlarm) {
         container.classList.remove("btn-outline-secondary");
         container.classList.add("btn-secondary");
+        container_2.classList.remove("btn-outline-secondary");
+        container_2.classList.add("btn-secondary");
     } else {
         container.classList.remove("btn-secondary");
         container.classList.add("btn-outline-secondary");
+        container_2.classList.remove("btn-outline-secondary");
+        container_2.classList.add("btn-secondary");
     }
 }
 
@@ -123,6 +128,10 @@ const Garage = () => {
 
 const Call = () => {
     fetchAPI((data) => { }, "/api/http/call");
+}
+
+const Reload = () => {
+    fetchAPI((data) => { }, "/api/pjsua/reload");
 }
 
 const Hangup = () => {
@@ -287,20 +296,24 @@ document.addEventListener('DOMContentLoaded', function () {
     Details();
     getDate();
     if (webRTC) {
-        getSip();
-        webphone_api.parameters['autostart'] = 0;
-        eventsSIP();
-        $("#connectSIP").hide();
-        $("#Call").hide();
-        $("#Hangup").hide();
-        $("#Accept").hide();
-        $("#Refresh").show();
+        const script = document.createElement('script');
+        script.src = "./webphone_api.js?jscodeversion=290";
+        document.getElementsByTagName('head')[0].appendChild(script);
+        script.onload = function () {
+            $("#log").show();
+            log("Script loaded and ready");
+            getSip();
+            webphone_api.parameters['autostart'] = 0;
+            eventsSIP();
+            $("#connectSIP").hide();
+            $("#Call").hide();
+            $("#Hangup").hide();
+            $("#Accept").hide();
+            $("#Refresh").show();
+        };
     } else {
         $("#connectSIP").hide();
         $("#Accept").hide();
-        setTimeout(() => {
-            try { webphone_api.stop(); } catch (error) { log(error); }
-            try { webphone_api.unregister(); } catch (error) { log(error); }
-        }, 6000);
+        $("#log").hide();
     }
 });
