@@ -1,0 +1,16 @@
+{
+  "short_name": "Interfon",
+  "name": "Interfon",
+  "description": "Interphone based on a raspberry pi, interactive with telegram and whatsapp",
+  "icons": [
+    {
+      "src": "favicon.ico",
+      "type": "image/x-icon",
+      "sizes": "48x48"
+    }
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#000000",
+  "background_color": "#ffffff"
+}
