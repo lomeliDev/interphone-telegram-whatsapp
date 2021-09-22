@@ -1,0 +1,132 @@
+html,
+body {
+    margin: 0 !important;
+    padding: 0 !important;
+    background: linear-gradient(239.73deg, rgb(92, 109, 120) 0%, rgb(20, 29, 35) 100%) !important;
+    color: #fff;
+    overflow: hidden;
+}
+
+.mobile {
+    display: none;
+}
+
+.camera {
+    height: 80vh;
+    padding: 0 !important;
+}
+
+.webcam {
+    width: 100%;
+    height: 80vh;
+}
+
+.buttons_top {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 1em;
+    padding-bottom: 1em;
+}
+
+.buttons_top_actions {
+    display: flex;
+    flex-direction: column;
+}
+
+.buttons_top_log {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.buttons_bottom {
+    height: 20vh;
+    padding-top: 1em;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-around;
+}
+
+.card {
+    background: linear-gradient(239.73deg, rgb(92, 109, 120) 0%, rgb(20, 29, 35) 100%) !important;
+    color: #fff;
+}
+
+.container_log {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+}
+
+h5 {
+    font-size: 12px !important;
+}
+
+.log_title {
+    font-size: 10px !important;
+}
+
+.log_value {
+    font-size: 10px !important;
+}
+
+.relog_top{
+    font-size: 22px;
+    font-weight: bold;
+}
+
+.log{
+    font-size: 10px !important;
+}
+
+@media screen and (orientation:portrait) {
+
+    html,
+    body {
+        overflow: auto;
+    }
+
+    .mobile {
+        display: inherit;
+    }
+
+    .full_buttons {
+        display: none;
+    }
+
+    h5 {
+        font-size: 16px !important;
+    }
+
+    .log_title {
+        font-size: 14px !important;
+    }
+
+    .log_value {
+        font-size: 14px !important;
+    }
+
+    .camera {
+        height: 60vh;
+    }
+
+    .webcam {
+        width: 100%;
+        height: 60vh;
+    }
+
+    .relog_top{
+        display: none;
+    }
+
+    .log{
+        display: none;
+    }
+}
