@@ -1,20 +1,26 @@
-const urlServer = "http://192.168.0.10:5001";
-const pathStreamOn = urlServer + "/stream/stream.mjpg";
+const urlServer = "http://" + window.location.host;
+let pathStreamOn = urlServer + "/stream/stream.mjpg";
 const pathStreamOff = "./images/camera.png";
-const debug = true;
-const webRTC = false;
 let statusStream = false;
 let statusLight = false;
 let statusAlarm = false;
+let statusFlash = false;
 let dataSIP = {
     host: "",
     port: "",
     user: "",
     password: ""
 }
+let debug = false;
+let webRTC = false;
+let hostESP32 = "";
 
 const log = (txt) => {
     debug && console.log(txt);
+}
+
+const focus = () => {
+    $('html, body').animate({ scrollTop: $('#relog_1').offset().top }, 'slow');
 }
 
 const checkStrem = () => {
@@ -57,6 +63,25 @@ const fetchAPI = (callback, path, status = true, details = () => { }) => {
             setTimeout(() => {
                 details();
             }, 30000);
+        });
+}
+
+const fetchESP32 = (host, path, status = true) => {
+    fetch(host + path, {
+        method: 'GET',
+    })
+        .then(async (resp) => {
+            if (resp.status === 200) {
+                return resp;
+            } else {
+                throw new Error("an error occurred");
+            }
+        })
+        .then((data) => {
+            status && toastr["success"](data.message);
+        })
+        .catch((error) => {
+            toastr["error"](error.message, "Error");
         });
 }
 
@@ -104,6 +129,7 @@ const toogleLight = () => {
     } else {
         fetchAPI(checkLight, "/api/http/light/on");
     }
+    focus();
 }
 
 const checkAlarm = (data) => {
@@ -116,22 +142,51 @@ const toogleAlarm = () => {
     } else {
         fetchAPI(checkAlarm, "/api/http/alarm/on");
     }
+    focus();
+}
+
+const toogleFlash = () => {
+    if (statusFlash) {
+        fetchESP32("http://" + hostESP32, "/off", false);
+        statusFlash = false;
+    } else {
+        fetchESP32("http://" + hostESP32, "/on", false);
+        statusFlash = true;
+    }
+    const container = document.getElementById("flash_led");
+    const container_2 = document.getElementById("flash_led_2");
+    if (statusFlash) {
+        container.classList.remove("btn-outline-dark");
+        container.classList.add("btn-dark");
+        container_2.classList.remove("btn-outline-dark");
+        container_2.classList.add("btn-dark");
+    } else {
+        container.classList.remove("btn-dark");
+        container.classList.add("btn-outline-dark");
+        container_2.classList.remove("btn-dark");
+        container_2.classList.add("btn-outline-dark");
+    }
+    focus();
 }
 
 const Door = () => {
     fetchAPI((data) => { }, "/api/http/door");
+    focus();
 }
 
 const Garage = () => {
     fetchAPI((data) => { }, "/api/http/garage");
+    focus();
 }
 
 const Call = () => {
     fetchAPI((data) => { }, "/api/http/call");
+    focus();
 }
 
 const Reload = () => {
     fetchAPI((data) => { }, "/api/pjsua/reload");
+    focus();
 }
 
 const Hangup = () => {
@@ -142,12 +197,14 @@ const Hangup = () => {
     try {
         webphone_api.reject();
     } catch (error) { }
+    focus();
 }
 
 const Accept = () => {
     try {
         webphone_api.accept();
     } catch (error) { }
+    focus();
 }
 
 const Details = () => {
@@ -270,50 +327,85 @@ const eventsSIP = () => {
 
 const Refresh = () => {
     window.location.reload();
+    focus();
+}
+
+const ESP32 = () => {
+    fetchESP32("http://" + hostESP32, "/reboot", false);
+    setTimeout(() => {
+        Refresh();
+    }, 5000);
 }
 
 document.addEventListener('DOMContentLoaded', function () {
     document.getElementById("webcam").src = pathStreamOff;
-    toastr.options = {
-        "closeButton": true,
-        "debug": false,
-        "newestOnTop": false,
-        "progressBar": false,
-        "positionClass": "toast-bottom-right",
-        "preventDuplicates": true,
-        "onclick": null,
-        "showDuration": "300",
-        "hideDuration": "1000",
-        "timeOut": "5000",
-        "extendedTimeOut": "1000",
-        "showEasing": "swing",
-        "hideEasing": "linear",
-        "showMethod": "fadeIn",
-        "hideMethod": "fadeOut"
-    }
-    fetchAPI(getStatusLight, "/api/http/light/status", false);
-    fetchAPI(getStatusAlarm, "/api/http/alarm/status", false);
-    Details();
-    getDate();
-    if (webRTC) {
-        const script = document.createElement('script');
-        script.src = "./webphone_api.js?jscodeversion=290";
-        document.getElementsByTagName('head')[0].appendChild(script);
-        script.onload = function () {
-            $("#log").show();
-            log("Script loaded and ready");
-            getSip();
-            webphone_api.parameters['autostart'] = 0;
-            eventsSIP();
+
+    fetchAPI((data) => {
+
+        if (data.camera === 'ESP32') {
+            pathStreamOn = "http://" + data.hostCamera + "/mjpeg/1";
+            hostESP32 = data.hostCamera;
+            fetchESP32("http://" + hostESP32, "/off", false);
+            $("#flash_led").show();
+            $("#flash_led_2").show();
+            $("#ESP32").show();
+        } else if (data.camera === 'NATIVE') {
+            pathStreamOn = urlServer + "/stream/stream.mjpg";
+            $("#flash_led").hide();
+            $("#flash_led_2").hide();
+            $("#ESP32").hide();
+        }
+        if (data.debug === true) {
+            debug = true;
+        }
+
+        if (data.webRTC === true) {
+            webRTC = true;
+        }
+
+        toastr.options = {
+            "closeButton": true,
+            "debug": false,
+            "newestOnTop": false,
+            "progressBar": false,
+            "positionClass": "toast-bottom-right",
+            "preventDuplicates": true,
+            "onclick": null,
+            "showDuration": "300",
+            "hideDuration": "1000",
+            "timeOut": "5000",
+            "extendedTimeOut": "1000",
+            "showEasing": "swing",
+            "hideEasing": "linear",
+            "showMethod": "fadeIn",
+            "hideMethod": "fadeOut"
+        }
+        fetchAPI(getStatusLight, "/api/http/light/status", false);
+        fetchAPI(getStatusAlarm, "/api/http/alarm/status", false);
+        Details();
+        getDate();
+        if (webRTC) {
+            const script = document.createElement('script');
+            script.src = "./webphone_api.js?jscodeversion=290";
+            document.getElementsByTagName('head')[0].appendChild(script);
+            script.onload = function () {
+                $("#log").show();
+                log("Script loaded and ready");
+                getSip();
+                webphone_api.parameters['autostart'] = 0;
+                eventsSIP();
+                $("#connectSIP").hide();
+                $("#Call").hide();
+                $("#Hangup").hide();
+                $("#Accept").hide();
+                $("#Refresh").show();
+            };
+        } else {
             $("#connectSIP").hide();
-            $("#Call").hide();
-            $("#Hangup").hide();
             $("#Accept").hide();
-            $("#Refresh").show();
-        };
-    } else {
-        $("#connectSIP").hide();
-        $("#Accept").hide();
-        $("#log").hide();
-    }
+            $("#log").hide();
+        }
+
+    }, "/api/http/general", false);
+
 });

@@ -8,7 +8,7 @@ body {
 }
 
 .mobile {
-    display: none;
+    display: none !important;
 }
 
 .camera {
@@ -86,6 +86,18 @@ h5 {
     font-size: 10px !important;
 }
 
+#ESP32{
+    display: none;
+}
+
+#flash_led{
+    display: none;
+}
+
+#flash_led_2{
+    display: none;
+}
+
 @media screen and (orientation:portrait) {
 
     html,
@@ -94,7 +106,7 @@ h5 {
     }
 
     .mobile {
-        display: inherit;
+        display: inherit !important;
     }
 
     .full_buttons {
