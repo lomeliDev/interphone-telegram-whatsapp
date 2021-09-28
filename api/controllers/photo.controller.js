@@ -18,7 +18,7 @@ class PhotoController {
     }
 
     capture(callback, arg_1, arg_2, arg_3) {
-        if (this._config.CAMERA !== "none") {
+        if (this._config.CAMERA !== "NONE") {
             try {
                 fs.unlinkSync(this.pathPhoto);
             } catch (error) { }

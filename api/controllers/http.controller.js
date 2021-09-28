@@ -219,6 +219,21 @@ class HttpController {
         }
     }
 
+    General(req, res) {
+        try {
+            res.status(200).send({
+                status: 200, message: 'OK', payload: {
+                    debug: this._config.DEBUG === '1' ? true : false,
+                    camera: this._config.CAMERA,
+                    webRTC: this._config.SIP_WEBRTC === 'true' ? true : false,
+                    hostCamera: this._config.HOST_CAMERA 
+                }
+            });
+        } catch (error) {
+            res.status(422).send({ status: 422, message: error.message || 'An unexpected error occurred', payload: {} });
+        }
+    }
+
 }
 
 module.exports = HttpController;

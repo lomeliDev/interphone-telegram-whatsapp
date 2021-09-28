@@ -14,7 +14,7 @@ module.exports = function ({ WhatsappRoutes, StreamRoutes, pjsuaRoutes, HttpRout
     apiRoute.use(express.urlencoded({ extended: false, limit: '50mb' }))
 
     apiRoute.use(function (req, res, next) {
-        res.setHeader('X-Powered-By', 'Interfon-Whatsapp');
+        res.setHeader('X-Powered-By', 'Interfon');
         res.setHeader('Content-Type', 'application/json');
         res.setHeader('Access-Control-Allow-Origin', '*');
         res.setHeader('Access-Control-Allow-Headers', 'Authorization, X-API-KEY, Origin , X-Requested-With , Content-Type , Accept , Access-Control-Allow-Request-Method');

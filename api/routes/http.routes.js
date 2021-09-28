@@ -21,6 +21,7 @@ module.exports = function ({ HttpController }) {
     router.get('/hangup', HttpController.Hangup.bind(HttpController));
     router.get('/details', HttpController.Details.bind(HttpController));
     router.get('/sip', HttpController.SIP.bind(HttpController));
+    router.get('/general', HttpController.General.bind(HttpController));
 
     return router;
 };

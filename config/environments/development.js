@@ -23,6 +23,7 @@ module.exports = {
     ADMIN_USER_TELEGRAM_2: process.env.ADMIN_USER_TELEGRAM_2,
     ADMIN_USER_TELEGRAM_3: process.env.ADMIN_USER_TELEGRAM_3,
     CAMERA: process.env.CAMERA,
+    HOST_CAMERA: process.env.HOST_CAMERA,
     KEY_STREAMING: process.env.KEY_STREAMING,
     KEY_READ_STREAMING: process.env.KEY_READ_STREAMING,
     PATH_PJSUA: process.env.PATH_PJSUA,
@@ -37,4 +38,5 @@ module.exports = {
     SIP_PORT: process.env.SIP_PORT,
     SIP_USER: process.env.SIP_USER,
     SIP_PASS: process.env.SIP_PASS,
+    SIP_WEBRTC: process.env.SIP_WEBRTC,
 };
