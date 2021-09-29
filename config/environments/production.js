@@ -3,6 +3,7 @@ module.exports = {
     PORT_API: process.env.PORT_API,
     PORT_STREAMING: process.env.PORT_STREAMING,
     PORT_WSS: process.env.PORT_WSS,
+    PORT_PROXY: process.env.PORT_PROXY,
     DEBUG: process.env.DEBUG,
     INTERFACE_NETWORK: process.env.INTERFACE_NETWORK,
     URL_HOST: process.env.URL_HOST,

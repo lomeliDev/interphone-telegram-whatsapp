@@ -1,6 +1,6 @@
 const { Router } = require("express");
 
-module.exports = function ({ HttpController }) {
+module.exports = function ({ HttpController, ProxyController }) {
     const router = Router();
 
     router.get('/light/status', HttpController.statusLight.bind(HttpController));
@@ -23,6 +23,7 @@ module.exports = function ({ HttpController }) {
     router.get('/sip', HttpController.SIP.bind(HttpController));
     router.get('/general', HttpController.General.bind(HttpController));
     router.get('/reboot', HttpController.Reboot.bind(HttpController));
+    router.get('/redirect', ProxyController.Redirect.bind(ProxyController));
 
     return router;
 };

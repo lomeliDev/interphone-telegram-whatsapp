@@ -10,4 +10,5 @@ module.exports = {
     pjsuaController: require("./pjsua.controller"),
     HttpController: require("./http.controller"),
     GatewayController: require("./gateway.controller"),
+    ProxyController: require("./proxy.controller"),
 };

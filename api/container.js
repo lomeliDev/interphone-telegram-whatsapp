@@ -30,6 +30,7 @@ const {
     pjsuaController,
     HttpController,
     GatewayController,
+    ProxyController,
 } = require("../api/controllers");
 
 container
@@ -68,6 +69,9 @@ container
         GatewayController: asClass(GatewayController).singleton(),
         HttpController: asClass(HttpController).singleton(),
         HttpRoutes: asFunction(HttpRoutes).singleton(),
+    })
+    .register({
+        ProxyController: asClass(ProxyController).singleton(),
     })
 
 module.exports = container;

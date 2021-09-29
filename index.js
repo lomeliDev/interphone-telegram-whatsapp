@@ -9,6 +9,7 @@ const Relays = container.resolve("RelaysController");
 const Stream = container.resolve("StreamController");
 const Video = container.resolve("VideoController");
 const pjsua = container.resolve("pjsuaController");
+const Proxy = container.resolve("ProxyController");
 
 application.start()
     .then(async () => {
@@ -21,6 +22,7 @@ application.start()
         await Stream.start();
         await Video.start();
         await pjsua.start();
+        await Proxy.start();
     })
     .catch(err => {
         console.log(err);
