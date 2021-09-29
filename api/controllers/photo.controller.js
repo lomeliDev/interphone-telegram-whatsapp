@@ -19,6 +19,51 @@ class PhotoController {
         });
     }
 
+    fetchESP32(timeout, path) {
+        try {
+            setTimeout(() => {
+                fetch(`http://${this._config.HOST_CAMERA}/${path}`).then(res => res).then(json => { });
+            }, timeout);
+        } catch (error) { }
+    }
+
+    captureESP32(callback, arg_1, arg_2, arg_3) {
+
+        this.fetchESP32(0, 'on');
+        this.fetchESP32(700, 'jpg-resume');
+        this.fetchESP32(1500, 'jpg-resume');
+        this.fetchESP32(2500, 'jpg-resume');
+        this.fetchESP32(4000, 'off');
+
+        setTimeout(() => {
+            fetch(`http://${this._config.HOST_CAMERA}/jpg`).then(async (res) => {
+                if (res.status === 200) {
+                    return res.buffer()
+                } else {
+                    throw new Error("an error occurred")
+                }
+
+            }).then(data => {
+                try {
+                    fs.writeFile(this.pathPhoto, data, (err) => {
+                        if (err) {
+                            callback(this.pathPhoto, arg_1, arg_2, false);
+                        } else {
+                            callback(this.pathPhoto, arg_1, arg_2, true);
+                        }
+                    })
+                } catch (error) {
+                    callback(this.pathPhoto, arg_1, arg_2, false);
+                }
+            }).catch((error) => {
+                console.log("error");
+                console.log(error);
+                callback(this.pathPhoto, arg_1, arg_2, false);
+            })
+        }, 5500);
+
+    }
+
     capture(callback, arg_1, arg_2, arg_3) {
         if (this._config.CAMERA !== "NONE") {
             try {
@@ -26,17 +71,7 @@ class PhotoController {
             } catch (error) { }
             setTimeout(() => {
                 if (this._config.CAMERA === "ESP32") {
-                    fetch(`http://${this._config.HOST_CAMERA}/on`).then(res => res).then(json => { });
-                    const streamUrl = `http://${this._config.HOST_CAMERA}/mjpeg/1`;
-                    shellExec(`ffmpeg -f mjpeg -r 6 -ss 00:00:00 -i "${streamUrl}" -s 640x480 -vframes 1 -q:v 2 -y ${this.pathPhoto}`);
-                    setTimeout(() => {
-                        fetch(`http://${this._config.HOST_CAMERA}/off`).then(res => res).then(json => { });
-                        try {
-                            callback(this.pathPhoto, arg_1, arg_2, true);
-                        } catch (error) {
-                            callback(this.pathPhoto, arg_1, arg_2, false);
-                        }
-                    }, 13000);
+                    this.captureESP32(callback, arg_1, arg_2, arg_3);
                 } else {
                     const result = this._stream.getLastFrame();
                     if (result !== null) {
