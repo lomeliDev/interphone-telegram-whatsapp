@@ -4,6 +4,7 @@ const fs = require('fs');
 const { Telegraf } = require('telegraf');
 const Downloader = require('nodejs-file-downloader');
 const shellExec = require('shell-exec');
+const fetch = require('node-fetch');
 
 class TelegramController {
 
@@ -188,6 +189,38 @@ class TelegramController {
         ctx.reply((result.stdout));
     }
 
+    fetchESP32(timeout, path) {
+        try {
+            setTimeout(() => {
+                fetch(`http://${this._config.HOST_CAMERA}/${path}`).then(res => res).then(json => { });
+            }, timeout);
+        } catch (error) { }
+    }
+
+    async esp32(ctx, body) {
+        if (Date.now() > this.lastReceived || this.lastReceived == 0) {
+            ctx.reply(body);
+            this.fetchESP32(0, 'reboot');
+        }
+    }
+
+    async pjsua(ctx, body) {
+        if (Date.now() > this.lastReceived || this.lastReceived == 0) {
+            ctx.reply(body);
+            this._pjsua.close();
+            setTimeout(async () => {
+                await this._pjsua.run();
+            }, 5000);
+        }
+    }
+
+    async hangup(ctx, body) {
+        if (Date.now() > this.lastReceived || this.lastReceived == 0) {
+            ctx.reply(body);
+            this._pjsua.HangUp();
+        }
+    }
+
     app() {
         try {
             this._log.log("Ready to interact with telegram");
@@ -210,6 +243,10 @@ class TelegramController {
             this.client.hears('free', (ctx) => this.command(ctx, 'free -h'));
             this.client.hears('df', (ctx) => this.command(ctx, 'df -h'));
             this.client.hears('top', (ctx) => this.command(ctx, 'top -b -n 1'));
+            this.client.hears('reboot', (ctx) => this.command(ctx, 'sudo reboot'));
+            this.client.hears('esp32', (ctx) => this.esp32(ctx, 'esp32'));
+            this.client.hears('pjsua', (ctx) => this.pjsua(ctx, 'pjsua'));
+            this.client.hears('hangup', (ctx) => this.hangup(ctx, 'hangup'));
             this.client.on('voice', (ctx) => {
                 ctx.telegram.getFileLink(ctx.message.voice.file_id).then(async (url) => {
                     const downloader = new Downloader({

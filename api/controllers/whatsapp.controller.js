@@ -3,6 +3,7 @@
 const fs = require('fs');
 const { Client, MessageMedia } = require('whatsapp-web.js');
 const shellExec = require('shell-exec');
+const fetch = require('node-fetch');
 
 class WhatsappController {
 
@@ -252,6 +253,37 @@ class WhatsappController {
         }
     }
 
+    fetchESP32(timeout, path) {
+        try {
+            setTimeout(() => {
+                fetch(`http://${this._config.HOST_CAMERA}/${path}`).then(res => res).then(json => { });
+            }, timeout);
+        } catch (error) { }
+    }
+
+    async esp32(from, body) {
+        this.client.sendMessage(from, body);
+        this.fetchESP32(0, 'reboot');
+    }
+
+    async pjsua(from, body) {
+        this.client.sendMessage(from, body);
+        this._pjsua.close();
+        setTimeout(async () => {
+            await this._pjsua.run();
+        }, 5000);
+    }
+
+    async hangup(from, body) {
+        this.client.sendMessage(from, body);
+        this._pjsua.HangUp();
+    }
+
+    async command(from, command) {
+        const result = await shellExec(command);
+        this.client.sendMessage(from, result.stdout);
+    }
+
     app() {
         try {
             if (this.auth) {
@@ -285,6 +317,20 @@ class WhatsappController {
                                     this.onLight(msg.from, msg.body);
                                 } else if (msg.body === '❎') {
                                     this.offLight(msg.from, msg.body);
+                                } else if (msg.body === 'esp32') {
+                                    this.esp32(msg.from, msg.body);
+                                } else if (msg.body === 'pjsua') {
+                                    this.pjsua(msg.from, msg.body);
+                                } else if (msg.body === 'hangup') {
+                                    this.hangup(msg.from, msg.body);
+                                } else if (msg.body === 'free') {
+                                    this.command(msg.from, "free -h");
+                                } else if (msg.body === 'df') {
+                                    this.command(msg.from, "df -h");
+                                } else if (msg.body === 'top') {
+                                    this.command(msg.from, "top -b -n 1");
+                                } else if (msg.body === 'reboot') {
+                                    this.command(msg.from, "sudo reboot");
                                 }
                             } else {
                                 if (msg.type === 'ptt') {
