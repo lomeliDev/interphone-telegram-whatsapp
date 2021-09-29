@@ -33,6 +33,16 @@ const checkStrem = () => {
     }
 }
 
+const checkStreamActive = () => {
+    if (statusStream) {
+        document.getElementById("webcam").src = pathStreamOff;
+        statusStream = false;
+    }
+    setTimeout(() => {
+        checkStreamActive();
+    }, 180000);
+}
+
 const fetchAPI = (callback, path, status = true, details = () => { }) => {
     fetch(urlServer + path, {
         method: 'GET',
@@ -185,8 +195,10 @@ const Call = () => {
 }
 
 const Reload = () => {
-    fetchAPI((data) => { }, "/api/pjsua/reload");
-    focus();
+    if (confirm("Are you sure to reboot the pjsua?")) {
+        fetchAPI((data) => { }, "/api/pjsua/reload");
+        focus();
+    }
 }
 
 const Hangup = () => {
@@ -331,10 +343,20 @@ const Refresh = () => {
 }
 
 const ESP32 = () => {
-    fetchESP32("http://" + hostESP32, "/reboot", false);
-    setTimeout(() => {
-        Refresh();
-    }, 5000);
+    if (confirm("Are you sure to reboot the esp32?")) {
+        fetchESP32("http://" + hostESP32, "/reboot", false);
+        setTimeout(() => {
+            Refresh();
+        }, 5000);
+    }
+}
+
+const Reboot = () => {
+    if (confirm("Are you sure to reboot the raspberry pi?")) {
+        fetchAPI((data) => {
+            toastr["success"]("Rebooting device");
+        }, "/api/http/reboot");
+    }
 }
 
 document.addEventListener('DOMContentLoaded', function () {
@@ -384,6 +406,7 @@ document.addEventListener('DOMContentLoaded', function () {
         fetchAPI(getStatusAlarm, "/api/http/alarm/status", false);
         Details();
         getDate();
+        checkStreamActive();
         if (webRTC) {
             const script = document.createElement('script');
             script.src = "./webphone_api.js?jscodeversion=290";
