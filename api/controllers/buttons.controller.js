@@ -55,11 +55,15 @@ class ButtonsController {
                 this._tg.sendMessage("Ring 🛎️");
                 this._whats.sendMessage("Ring 🛎️");
                 this._photo.capture(this.sendPhotoCallback, this, null, null);
-                this._pjsua.call(this._config.SIP_QUEUE);
-                this._relays.onLight();
-                setTimeout(() => {
-                    this._relays.offLight();
-                }, 6000);
+                if (this._config.SIP_STATUS === 'true' || this._config.SIP_STATUS === true) {
+                    this._pjsua.call(this._config.SIP_QUEUE);
+                }
+                if (this._config.RELAY_RING_STATUS === 'true' || this._config.RELAY_RING_STATUS === true) {
+                    this._relays.onLight();
+                    setTimeout(() => {
+                        this._relays.offLight();
+                    }, 10000);
+                }
             }
         });
     }

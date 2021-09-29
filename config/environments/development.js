@@ -29,6 +29,7 @@ module.exports = {
     PATH_PJSUA: process.env.PATH_PJSUA,
     PATH_PJSUA_CONFIG: process.env.PATH_PJSUA_CONFIG,
     TIMEOUT_PJSUA: process.env.TIMEOUT_PJSUA,
+    SIP_STATUS: process.env.SIP_STATUS,
     SIP_NUMBER: process.env.SIP_NUMBER,
     SIP_QUEUE: process.env.SIP_QUEUE,
     SIP_NUMBER_ADMIN_1: process.env.SIP_NUMBER_ADMIN_1,
@@ -39,4 +40,9 @@ module.exports = {
     SIP_USER: process.env.SIP_USER,
     SIP_PASS: process.env.SIP_PASS,
     SIP_WEBRTC: process.env.SIP_WEBRTC,
+    RELAY_RING_STATUS: process.env.RELAY_RING_STATUS,
+    RELAY_PHOTO_STATUS: process.env.RELAY_PHOTO_STATUS,
+    RELAY_PHOTO_TIME: process.env.RELAY_PHOTO_TIME,
+    RELAY_VIDEO_STATUS: process.env.RELAY_VIDEO_STATUS,
+    RELAY_VIDEO_TIME: process.env.RELAY_VIDEO_TIME,
 };

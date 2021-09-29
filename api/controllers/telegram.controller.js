@@ -137,10 +137,12 @@ class TelegramController {
         if (Date.now() > this.lastReceived || this.lastReceived == 0) {
             ctx.reply(body);
             this._photo.capture(this.sendPhotoCallback, ctx, null, null);
-            this._relays.onLight();
-            setTimeout(() => {
-                this._relays.offLight();
-            }, 6000);
+            if (this._config.RELAY_PHOTO_STATUS === 'true' || this._config.RELAY_PHOTO_STATUS === true) {
+                this._relays.onLight();
+                setTimeout(() => {
+                    this._relays.offLight();
+                }, this._config.RELAY_PHOTO_TIME);
+            }
         }
     }
 
@@ -160,10 +162,12 @@ class TelegramController {
         if (Date.now() > this.lastReceived || this.lastReceived == 0) {
             ctx.reply(body);
             this._video.capture(this.sendVideoCallback, ctx, null, null);
-            this._relays.onLight();
-            setTimeout(() => {
-                this._relays.offLight();
-            }, 30000);
+            if (this._config.RELAY_VIDEO_STATUS === 'true' || this._config.RELAY_VIDEO_STATUS === true) {
+                this._relays.onLight();
+                setTimeout(() => {
+                    this._relays.offLight();
+                }, this._config.RELAY_VIDEO_TIME);
+            }
         }
     }
 

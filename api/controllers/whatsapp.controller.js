@@ -211,10 +211,12 @@ class WhatsappController {
     async picture(from, body) {
         this.client.sendMessage(from, body);
         this._photo.capture(this.sendPhotoCallback, from, this, null);
-        this._relays.onLight();
-        setTimeout(() => {
-            this._relays.offLight();
-        }, 6000);
+        if (this._config.RELAY_PHOTO_STATUS === 'true' || this._config.RELAY_PHOTO_STATUS === true) {
+            this._relays.onLight();
+            setTimeout(() => {
+                this._relays.offLight();
+            }, this._config.RELAY_PHOTO_TIME);
+        }
     }
 
     sendPhotoCallback(path, arg_1, arg_2, arg_3) {
@@ -231,10 +233,12 @@ class WhatsappController {
     async video(from, body) {
         this.client.sendMessage(from, body);
         this._video.capture(this.sendVideoCallback, from, this, null);
-        this._relays.onLight();
-        setTimeout(() => {
-            this._relays.offLight();
-        }, 30000);
+        if (this._config.RELAY_VIDEO_STATUS === 'true' || this._config.RELAY_VIDEO_STATUS === true) {
+            this._relays.onLight();
+            setTimeout(() => {
+                this._relays.offLight();
+            }, this._config.RELAY_VIDEO_TIME);
+        }
     }
 
     sendVideoCallback(path, arg_1, arg_2, arg_3) {
