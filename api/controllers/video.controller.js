@@ -40,9 +40,9 @@ class VideoController {
                         timeCallBack = 65000;
                         streamUrl = `http://${this._config.HOST_CAMERA}/mjpeg/1`;
                         this.fetchESP32(0, 'on');
-                        shellExec(`ffmpeg -f mjpeg -r 6 -i "${streamUrl}" -b:v 4000k -c:v libx264 -crf 19 -r 6 -s 640x480 -to 00:00:15 -y ${this.pathVideo}`);
+                        shellExec(`screen -S video -d -m ffmpeg -f mjpeg -r 6 -reconnect 1 -reconnect_at_eof 1 -reconnect_streamed 1 -reconnect_delay_max 2 -i "${streamUrl}" -b:v 4000k -c:v libx264 -crf 19 -r 6 -s 640x480 -to 00:00:15 -y ${this.pathVideo}`);
                     } else {
-                        shellExec(`ffmpeg -f mjpeg -r 16 -i "${streamUrl}" -b:v 4000k -c:v libx264 -crf 19 -r 8 -s 640x480 -to 00:00:15 -y ${this.pathVideo}`);
+                        shellExec(`screen -S video -d -m ffmpeg -f mjpeg -r 16 -reconnect 1 -reconnect_at_eof 1 -reconnect_streamed 1 -reconnect_delay_max 2 -i "${streamUrl}" -b:v 4000k -c:v libx264 -crf 19 -r 8 -s 640x480 -to 00:00:15 -y ${this.pathVideo}`);
                     }
                     setTimeout(() => {
                         if (this._config.CAMERA === "ESP32") {
