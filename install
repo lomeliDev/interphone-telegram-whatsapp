@@ -22,3 +22,25 @@ vcgencmd get_camera
 raspistill -o test.jpg
 
 #https://www.youtube.com/watch?v=xXoAswjFK5I audio
+
+///Menu Telegram ES
+user - Regresa el ID del usuario
+free - Memoria ram
+df - Detalle de la SD card
+reboot - Reinicio de la raspberry
+esp32 - Reinicia el ESP32-CAM
+pjsua - Reincia el softhphone
+hangup - Cuelga la llamada actual
+redirect - URL del stream
+help - Ayuda
+
+///Menu Telegram EN
+user - Returns the user ID
+free - Memory ram
+df - SD card detail
+reboot - Restart the raspberry
+esp32 - Restart the ESP32-CAM
+pjsua - Restart the softphone
+hangup - Hang up the current call
+redirect - Stream url
+help - Help

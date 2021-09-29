@@ -237,6 +237,52 @@ class TelegramController {
         }
     }
 
+    async help(ctx) {
+        if (Date.now() > this.lastReceived || this.lastReceived == 0) {
+            const helpTextES = 'user - Regresa el ID del usuario\n' +
+                'free - Memoria ram\n' +
+                'df - Detalle de la SD card\n' +
+                'reboot - Reinicio de la raspberry\n' +
+                'esp32 - Reinicia el ESP32-CAM\n' +
+                'pjsua - Reincia el softhphone\n' +
+                'hangup - Cuelga la llamada actual\n' +
+                'redirect - URL del stream\n\n' +
+                '🚪 - Abre la puerta\n' +
+                '🚗 - Abre el porton del garage\n' +
+                '🔔 - Enciende la alarma\n' +
+                '🔕 - Apaga la alarma\n' +
+                '📞 - Te llama solamente a ti el asterisk\n' +
+                '🛎️ - Llama a todos el asterisk\n' +
+                '📷 - Toma una foto\n' +
+                '🎥 - Toma un video\n' +
+                '✅ - Enciende el flash\n' +
+                '❎ - Apaga el flash\n' +
+                '📵 - Cuelga la llamada actual\n';
+
+            const helpTextEN = 'user - Returns the user ID\n' +
+                'free - Memory ram\n' +
+                'df - SD card detail\n' +
+                'reboot - Restart the raspberry\n' +
+                'esp32 - Restart the ESP32-CAM\n' +
+                'pjsua - Restart the softphone\n' +
+                'hangup - Hang up the current call\n' +
+                'redirect - Stream url\n\n' +
+                '🚪 - Open the door\n' +
+                '🚗 - Open the garage door\n' +
+                '🔔 - Turn on the alarm\n' +
+                '🔕 - Turn off the alarm\n' +
+                '📞 - The asterisk only calls you\n' +
+                '🛎️ - Call everyone the asterisk\n' +
+                '📷 - Take a photo\n' +
+                '🎥 - Take a video\n' +
+                '✅ - Turn on the flash\n' +
+                '❎ - Turn off the flash\n' +
+                '📵 - Hang up the current call';
+
+            ctx.reply(this._config.TELEGRAM_MENU_LANG === "en" ? helpTextEN : helpTextES);
+        }
+    }
+
     app() {
         try {
             this._log.log("Ready to interact with telegram");
@@ -264,6 +310,29 @@ class TelegramController {
             this.client.hears('pjsua', (ctx) => this.pjsua(ctx, 'pjsua'));
             this.client.hears('hangup', (ctx) => this.hangup(ctx, 'hangup'));
             this.client.hears('redirect', (ctx) => this.redirect(ctx));
+
+            this.client.command('help', (ctx) => this.help(ctx));
+            this.client.command('user', (ctx) => ctx.reply(ctx.message.from.id));
+            this.client.command('free', (ctx) => this.command(ctx, 'free -h'));
+            this.client.command('df', (ctx) => this.command(ctx, 'df -h'));
+            this.client.command('top', (ctx) => this.command(ctx, 'top -b -n 1'));
+            this.client.command('reboot', (ctx) => this.command(ctx, 'sudo reboot'));
+            this.client.command('esp32', (ctx) => this.esp32(ctx, 'esp32'));
+            this.client.command('pjsua', (ctx) => this.pjsua(ctx, 'pjsua'));
+            this.client.command('hangup', (ctx) => this.hangup(ctx, 'hangup'));
+            this.client.command('redirect', (ctx) => this.redirect(ctx));
+            this.client.command('🚪', (ctx) => this.openDoor(ctx, '🚪'));
+            this.client.command('🚗', (ctx) => this.openGarage(ctx, '🚗'));
+            this.client.command('🔔', (ctx) => this.onAlarm(ctx, '🔔'));
+            this.client.command('🔕', (ctx) => this.offAlarm(ctx, '🔕'));
+            this.client.command('📞', (ctx) => this.call(ctx, '📞'));
+            this.client.command('🛎️', (ctx) => this.ringall(ctx, '🛎️'));
+            this.client.command('📷', (ctx) => this.picture(ctx, '📷'));
+            this.client.command('🎥', (ctx) => this.video(ctx, '🎥'));
+            this.client.command('✅', (ctx) => this.onLight(ctx, '✅'));
+            this.client.command('❎', (ctx) => this.offLight(ctx, '❎'));
+            this.client.command('📵', (ctx) => this.hangup(ctx, '📵'));
+
             this.client.on('voice', (ctx) => {
                 ctx.telegram.getFileLink(ctx.message.voice.file_id).then(async (url) => {
                     const downloader = new Downloader({
