@@ -6,9 +6,10 @@ const Gpio = require('onoff').Gpio;
 
 class RelaysController {
 
-    constructor({ config, Log }) {
+    constructor({ config, Log, GatewayController }) {
         this._config = config;
         this._log = Log;
+        this._gateway = GatewayController;
         this.lastDoor = 0;
         this.lastGarage = 0;
         this.lastLight = 0;
@@ -51,6 +52,7 @@ class RelaysController {
             this.lastLight = Date.now() + (1000 * 3);
             const relay = new Gpio(12, 'high');
             relay.write(0);
+            this._gateway.onLight();
             setTimeout(() => { this._log.log("open relay light"); relay.unexport(); }, 500);
         }
     }
@@ -60,6 +62,7 @@ class RelaysController {
             this.lastLight = Date.now() + (1000 * 3);
             const relay = new Gpio(12, 'high');
             relay.write(1);
+            this._gateway.offLight();
             setTimeout(() => { this._log.log("close relay light"); relay.unexport(); }, 500);
         }
     }

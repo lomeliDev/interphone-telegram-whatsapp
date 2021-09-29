@@ -4,7 +4,6 @@ const pathStreamOff = "./images/camera.png";
 let statusStream = false;
 let statusLight = false;
 let statusAlarm = false;
-let statusFlash = false;
 let dataSIP = {
     host: "",
     port: "",
@@ -136,8 +135,14 @@ const checkLight = (data) => {
 const toogleLight = () => {
     if (statusLight) {
         fetchAPI(checkLight, "/api/http/light/off");
+        if (hostESP32 !== "") {
+            fetchESP32("http://" + hostESP32, "/off", false);
+        }
     } else {
         fetchAPI(checkLight, "/api/http/light/on");
+        if (hostESP32 !== "") {
+            fetchESP32("http://" + hostESP32, "/on", false);
+        }
     }
     focus();
 }
@@ -151,30 +156,6 @@ const toogleAlarm = () => {
         fetchAPI(checkAlarm, "/api/http/alarm/off");
     } else {
         fetchAPI(checkAlarm, "/api/http/alarm/on");
-    }
-    focus();
-}
-
-const toogleFlash = () => {
-    if (statusFlash) {
-        fetchESP32("http://" + hostESP32, "/off", false);
-        statusFlash = false;
-    } else {
-        fetchESP32("http://" + hostESP32, "/on", false);
-        statusFlash = true;
-    }
-    const container = document.getElementById("flash_led");
-    const container_2 = document.getElementById("flash_led_2");
-    if (statusFlash) {
-        container.classList.remove("btn-outline-dark");
-        container.classList.add("btn-dark");
-        container_2.classList.remove("btn-outline-dark");
-        container_2.classList.add("btn-dark");
-    } else {
-        container.classList.remove("btn-dark");
-        container.classList.add("btn-outline-dark");
-        container_2.classList.remove("btn-dark");
-        container_2.classList.add("btn-outline-dark");
     }
     focus();
 }
@@ -230,6 +211,11 @@ const Details = () => {
         $("#cpu").html(data.cpu);
         $("#disk").html(data.disk);
         $("#pjsua").html(data.pjsua);
+        getStatusLight({ status: data.light });
+        if (!statusStream && data.light) {
+            document.getElementById("webcam").src = pathStreamOn;
+            statusStream = true;
+        }
         setTimeout(() => {
             Details();
         }, 3000);
@@ -364,17 +350,15 @@ document.addEventListener('DOMContentLoaded', function () {
 
     fetchAPI((data) => {
 
+        fetchAPI(checkLight, "/api/http/light/off-init", false);
+
         if (data.camera === 'ESP32') {
             pathStreamOn = "http://" + data.hostCamera + "/mjpeg/1";
             hostESP32 = data.hostCamera;
             fetchESP32("http://" + hostESP32, "/off", false);
-            $("#flash_led").show();
-            $("#flash_led_2").show();
             $("#ESP32").show();
         } else if (data.camera === 'NATIVE') {
             pathStreamOn = urlServer + "/stream/stream.mjpg";
-            $("#flash_led").hide();
-            $("#flash_led_2").hide();
             $("#ESP32").hide();
         }
         if (data.debug === true) {

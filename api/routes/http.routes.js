@@ -6,6 +6,7 @@ module.exports = function ({ HttpController, ProxyController }) {
     router.get('/light/status', HttpController.statusLight.bind(HttpController));
     router.get('/light/on', HttpController.onLight.bind(HttpController));
     router.get('/light/off', HttpController.offLight.bind(HttpController));
+    router.get('/light/off-init', HttpController.offLightInit.bind(HttpController));
     router.get('/light/status/yes', HttpController.yesStatusLight.bind(HttpController));
     router.get('/light/status/no', HttpController.noStatusLight.bind(HttpController));
 

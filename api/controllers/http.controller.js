@@ -56,6 +56,21 @@ class HttpController {
         }
     }
 
+    offLightInit(req, res) {
+        try {
+            if (Date.now() > this._buttons.lastLight || this._buttons.lastLight == 0) {
+                this._buttons.lastLight = Date.now() + (1000 * 3);
+                this._relays.offLight();
+                this._buttons.statusLight = false;
+                res.status(200).send({ status: 200, message: 'OK', payload: {} });
+            } else {
+                throw new Error('Light: Wait a few seconds to perform the action')
+            }
+        } catch (error) {
+            res.status(422).send({ status: 422, message: error.message || 'An unexpected error occurred', payload: {} });
+        }
+    }
+
     statusAlarm(req, res) {
         try {
             res.status(200).send({ status: 200, message: 'OK', payload: { status: this._buttons.statusAlarm } });
@@ -177,6 +192,7 @@ class HttpController {
                     disk: disk.stdout.replace("\n", ""),
                     cpu: cpu.stdout.replace("\n", "%"),
                     pjsua: pjsua.stdout.replace("\n", ""),
+                    light: this._buttons.statusLight
                 }
             });
         } catch (error) {
