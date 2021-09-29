@@ -212,6 +212,7 @@ const Details = () => {
         $("#disk").html(data.disk);
         $("#pjsua").html(data.pjsua);
         getStatusLight({ status: data.light });
+        getStatusAlarm({ status: data.alarm });
         if (!statusStream && data.light) {
             document.getElementById("webcam").src = pathStreamOn;
             statusStream = true;
@@ -351,6 +352,7 @@ document.addEventListener('DOMContentLoaded', function () {
     fetchAPI((data) => {
 
         fetchAPI(checkLight, "/api/http/light/off-init", false);
+        fetchAPI(checkLight, "/api/http/alarm/off-init", false);
 
         if (data.camera === 'ESP32') {
             pathStreamOn = "http://" + data.hostCamera + "/mjpeg/1";

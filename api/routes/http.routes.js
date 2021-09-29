@@ -13,6 +13,7 @@ module.exports = function ({ HttpController, ProxyController }) {
     router.get('/alarm/status', HttpController.statusAlarm.bind(HttpController));
     router.get('/alarm/on', HttpController.onAlarm.bind(HttpController));
     router.get('/alarm/off', HttpController.offAlarm.bind(HttpController));
+    router.get('/alarm/off-init', HttpController.offAlarmInit.bind(HttpController));
     router.get('/alarm/status/yes', HttpController.yesStatusAlarm.bind(HttpController));
     router.get('/alarm/status/no', HttpController.noStatusAlarm.bind(HttpController));
 
