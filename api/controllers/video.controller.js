@@ -19,6 +19,14 @@ class VideoController {
         });
     }
 
+    fetchESP32(timeout, path) {
+        try {
+            setTimeout(() => {
+                fetch(`http://${this._config.HOST_CAMERA}/${path}`).then(res => res).then(json => { });
+            }, timeout);
+        } catch (error) { }
+    }
+
     capture(callback, arg_1, arg_2, arg_3) {
         if (this._config.CAMERA !== "NONE") {
             try {
@@ -31,16 +39,24 @@ class VideoController {
                     if (this._config.CAMERA === "ESP32") {
                         timeCallBack = 65000;
                         streamUrl = `http://${this._config.HOST_CAMERA}/mjpeg/1`;
-                        fetch(`http://${this._config.HOST_CAMERA}/on`).then(res => res).then(json => { });
+                        this.fetchESP32(0, 'on');
                         shellExec(`ffmpeg -f mjpeg -r 6 -i "${streamUrl}" -b:v 4000k -c:v libx264 -crf 19 -r 6 -s 640x480 -to 00:00:15 -y ${this.pathVideo}`);
                     } else {
                         shellExec(`ffmpeg -f mjpeg -r 16 -i "${streamUrl}" -b:v 4000k -c:v libx264 -crf 19 -r 8 -s 640x480 -to 00:00:15 -y ${this.pathVideo}`);
                     }
                     setTimeout(() => {
                         if (this._config.CAMERA === "ESP32") {
-                            fetch(`http://${this._config.HOST_CAMERA}/off`).then(res => res).then(json => { });
+                            this.fetchESP32(0, 'off');
                         }
-                        callback(this.pathVideo, arg_1, arg_2, true);
+                        try {
+                            if (fs.existsSync(this.pathVideo)) {
+                                callback(this.pathVideo, arg_1, arg_2, true);
+                            } else {
+                                callback(this.pathVideo, arg_1, arg_2, false);
+                            }
+                        } catch (err) {
+                            callback(this.pathVideo, arg_1, arg_2, false);
+                        }
                     }, timeCallBack);
                 } catch (e) {
                     callback(this.pathVideo, arg_1, arg_2, result);
