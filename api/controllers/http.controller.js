@@ -226,9 +226,18 @@ class HttpController {
                     debug: this._config.DEBUG === '1' ? true : false,
                     camera: this._config.CAMERA,
                     webRTC: this._config.SIP_WEBRTC === 'true' ? true : false,
-                    hostCamera: this._config.HOST_CAMERA 
+                    hostCamera: this._config.HOST_CAMERA
                 }
             });
+        } catch (error) {
+            res.status(422).send({ status: 422, message: error.message || 'An unexpected error occurred', payload: {} });
+        }
+    }
+
+    async Reboot(req, res) {
+        try {
+            shellExec("sudo reboot");
+            res.status(200).send({ status: 200, message: 'OK', payload: {} });
         } catch (error) {
             res.status(422).send({ status: 422, message: error.message || 'An unexpected error occurred', payload: {} });
         }

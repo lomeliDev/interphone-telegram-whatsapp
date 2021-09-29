@@ -22,6 +22,7 @@ module.exports = function ({ HttpController }) {
     router.get('/details', HttpController.Details.bind(HttpController));
     router.get('/sip', HttpController.SIP.bind(HttpController));
     router.get('/general', HttpController.General.bind(HttpController));
+    router.get('/reboot', HttpController.Reboot.bind(HttpController));
 
     return router;
 };
