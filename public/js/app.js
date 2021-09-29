@@ -214,8 +214,10 @@ const Details = () => {
         getStatusLight({ status: data.light });
         getStatusAlarm({ status: data.alarm });
         if (!statusStream && data.light) {
-            document.getElementById("webcam").src = pathStreamOn;
             statusStream = true;
+            setTimeout(() => {
+                document.getElementById("webcam").src = pathStreamOn;
+            }, 12000);
         }
         setTimeout(() => {
             Details();
