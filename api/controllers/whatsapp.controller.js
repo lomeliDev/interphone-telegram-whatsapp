@@ -352,6 +352,9 @@ class WhatsappController {
                                 if (msg.type === 'ptt') {
                                     const attachmentData = await msg.downloadMedia();
                                     const pathFileVoice = __dirname + '/../../data/voice.ogg';
+                                    try {
+                                        fs.unlinkSync(pathFileVoice);
+                                    } catch (error) { }
                                     const _this = this;
                                     fs.writeFile(pathFileVoice, attachmentData.data, 'base64', function (err) {
                                         if (err != null) {
@@ -359,7 +362,8 @@ class WhatsappController {
                                         } else {
                                             _this.client.sendMessage(msg.from, '🎵');
                                             if (_this._config.AUDIO_AUTOPLAY_WHATSAPP === true || _this._config.AUDIO_AUTOPLAY_WHATSAPP === 'true') {
-                                                shellExec('omxplayer -o local --vol 500 ' + pathFileVoice);
+                                                shellExec(`screen -S audio -d -m ffplay -i ${pathFileVoice} -autoexit -nodisp`);
+                                                //shellExec(`screen -S audio -d -m omxplayer -o ${_this._config.AUDIO_DEVICE_ID_SOUND_CARD} --vol 900 ${pathFileVoice}`);
                                             }
                                         }
                                     });

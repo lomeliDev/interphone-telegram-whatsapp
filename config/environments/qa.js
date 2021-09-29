@@ -47,4 +47,5 @@ module.exports = {
     RELAY_PHOTO_TIME: process.env.RELAY_PHOTO_TIME,
     RELAY_VIDEO_STATUS: process.env.RELAY_VIDEO_STATUS,
     RELAY_VIDEO_TIME: process.env.RELAY_VIDEO_TIME,
+    AUDIO_DEVICE_ID_SOUND_CARD: process.env.AUDIO_DEVICE_ID_SOUND_CARD,
 };

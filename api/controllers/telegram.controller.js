@@ -310,7 +310,6 @@ class TelegramController {
             this.client.hears('pjsua', (ctx) => this.pjsua(ctx, 'pjsua'));
             this.client.hears('hangup', (ctx) => this.hangup(ctx, 'hangup'));
             this.client.hears('redirect', (ctx) => this.redirect(ctx));
-
             this.client.command('help', (ctx) => this.help(ctx));
             this.client.command('user', (ctx) => ctx.reply(ctx.message.from.id));
             this.client.command('free', (ctx) => this.command(ctx, 'free -h'));
@@ -332,24 +331,27 @@ class TelegramController {
             this.client.command('✅', (ctx) => this.onLight(ctx, '✅'));
             this.client.command('❎', (ctx) => this.offLight(ctx, '❎'));
             this.client.command('📵', (ctx) => this.hangup(ctx, '📵'));
-
             this.client.on('voice', (ctx) => {
+                try {
+                    fs.unlinkSync(pathFileVoice);
+                } catch (error) { }
                 ctx.telegram.getFileLink(ctx.message.voice.file_id).then(async (url) => {
                     const downloader = new Downloader({
                         url: url.href,
                         directory: __dirname + '/../../data/',
-                        fileName: 'voice.oga',
+                        fileName: 'voice.ogg',
                         cloneFiles: false
                     })
                     try {
                         await downloader.download();
                         ctx.reply('🎵');
                         if (this._config.AUDIO_AUTOPLAY_TELEGRAM === true || this._config.AUDIO_AUTOPLAY_TELEGRAM === 'true') {
-                            const pathFileVoice = __dirname + '/../../data/voice.oga';
-                            shellExec('omxplayer -o local --vol 500 ' + pathFileVoice);
+                            const pathFileVoice = __dirname + '/../../data/voice.ogg';
+                            shellExec(`screen -S audio -d -m ffplay -i ${pathFileVoice} -autoexit -nodisp`);
+                            //shellExec(`omxplayer -o ${this._config.AUDIO_DEVICE_ID_SOUND_CARD} --vol 900 ${pathFileVoice}`);
                         }
                     } catch (error) {
-                        ctx.reply('*** error 2 ***');
+                        ctx.reply('*** error ***');
                     }
                 }).catch((err) => {
                     ctx.reply('*** error ***');
