@@ -152,7 +152,7 @@ void camCB(void *pvParameters)
     camSize = s;
     ifb++;
     ifb &= 1; // this should produce 1, 0, 1, 0, 1 ... sequence
-    portEXIT_CRITICAL(&xSemaphore);
+    portEXIT_CRITICAL(&xSemaphore);    
 
     //  Let anyone waiting for a frame know that the frame is ready
     xSemaphoreGive(frameSync);
@@ -287,16 +287,36 @@ const char JHEADER[] = "HTTP/1.1 200 OK\r\n"
                        "Content-type: image/jpeg\r\n\r\n";
 const int jhdLen = strlen(JHEADER);
 
+// ==== Resume JPG ============================================
+void handleResumeJPG()
+{
+  if (eTaskGetState(tCam) == eSuspended){
+    vTaskResume(tCam);
+  }
+  String message = "Server is running!\n\n";
+  message += "URI: ";
+  message += server.uri();
+  message += "\nMethod: ";
+  message += (server.method() == HTTP_GET) ? "GET" : "POST";
+  message += "\nArguments: ";
+  message += server.args();
+  message += "\n";
+  server.sendHeader("Access-Control-Allow-Origin","*");
+  server.send(200, "text/plain", message);
+}
+
 // ==== Serve up one JPEG frame =============================================
 void handleJPG(void)
 {
   WiFiClient client = server.client();
 
-  if (!client.connected())
+  if (!client.connected()){
     return;
-  cam.run();
+  }
+
   client.write(JHEADER, jhdLen);
-  client.write((char *)cam.getfb(), cam.getSize());
+  client.write((char *)camBuf, (size_t)camSize);
+
 }
 
 // ==== Handle invalid URL requests ============================================
@@ -399,6 +419,7 @@ void mjpegCB(void *pvParameters)
 
   //  Registering webserver handling routines
   server.on("/mjpeg/1", HTTP_GET, handleJPGSstream);
+  server.on("/jpg-resume", HTTP_GET, handleResumeJPG);
   server.on("/jpg", HTTP_GET, handleJPG);
   server.on("/on", HTTP_GET, handleON);
   server.on("/off", HTTP_GET, handleOFF);
