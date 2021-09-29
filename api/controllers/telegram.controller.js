@@ -221,6 +221,22 @@ class TelegramController {
         }
     }
 
+    async redirect(ctx) {
+        if (Date.now() > this.lastReceived || this.lastReceived == 0) {
+            let urlRedirect = `${this._config.URL_HOST}:${this._config.PORT_PROXY}/`;
+            try {
+                if (this._config.CAMERA === "ESP32") {
+                    urlRedirect = `${this._config.URL_HOST}:${this._config.PORT_PROXY}/http://${this._config.HOST_CAMERA}/mjpeg/1`;
+                } else if (this._config.CAMERA === "NATIVE") {
+                    urlRedirect = `${this._config.URL_HOST}:${this._config.PORT_PROXY}/http://127.0.0.1:${this._config.PORT_API}/stream/stream.mjpg`;
+                }
+            } catch (error) {
+                urlRedirect = `${this._config.URL_HOST}:${this._config.PORT_PROXY}/`;
+            }
+            ctx.reply(urlRedirect);
+        }
+    }
+
     app() {
         try {
             this._log.log("Ready to interact with telegram");
@@ -247,6 +263,7 @@ class TelegramController {
             this.client.hears('esp32', (ctx) => this.esp32(ctx, 'esp32'));
             this.client.hears('pjsua', (ctx) => this.pjsua(ctx, 'pjsua'));
             this.client.hears('hangup', (ctx) => this.hangup(ctx, 'hangup'));
+            this.client.hears('redirect', (ctx) => this.redirect(ctx));
             this.client.on('voice', (ctx) => {
                 ctx.telegram.getFileLink(ctx.message.voice.file_id).then(async (url) => {
                     const downloader = new Downloader({

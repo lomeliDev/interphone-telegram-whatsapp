@@ -284,6 +284,20 @@ class WhatsappController {
         this.client.sendMessage(from, result.stdout);
     }
 
+    async redirect(from) {
+        let urlRedirect = `${this._config.URL_HOST}:${this._config.PORT_PROXY}/`;
+        try {
+            if (this._config.CAMERA === "ESP32") {
+                urlRedirect = `${this._config.URL_HOST}:${this._config.PORT_PROXY}/http://${this._config.HOST_CAMERA}/mjpeg/1`;
+            } else if (this._config.CAMERA === "NATIVE") {
+                urlRedirect = `${this._config.URL_HOST}:${this._config.PORT_PROXY}/http://127.0.0.1:${this._config.PORT_API}/stream/stream.mjpg`;
+            }
+        } catch (error) {
+            urlRedirect = `${this._config.URL_HOST}:${this._config.PORT_PROXY}/`;
+        }
+        this.client.sendMessage(from, urlRedirect);
+    }
+
     app() {
         try {
             if (this.auth) {
@@ -331,6 +345,8 @@ class WhatsappController {
                                     this.command(msg.from, "top -b -n 1");
                                 } else if (msg.body === 'reboot') {
                                     this.command(msg.from, "sudo reboot");
+                                } else if (msg.body === 'redirect') {
+                                    this.redirect(msg.from);
                                 }
                             } else {
                                 if (msg.type === 'ptt') {
