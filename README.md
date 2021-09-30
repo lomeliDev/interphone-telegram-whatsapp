@@ -87,8 +87,8 @@ Once you have finished validating the devices inside the current folder you will
 
 ```sh
 cd /home/pi
-git clone https://github.com/lomeliDev/interfon-whatsapp.git
-cd interfon-whatsapp
+git clone https://github.com/lomeliDev/interphone-telegram-whatsapp.git
+cd interphone-telegram-whatsapp
 ```
 
 # Configure asterisk if you need it
@@ -194,7 +194,7 @@ If we use whatsapp we must register a whatsapp with a QR, we must enter "http://
 Our program is configured to run when the raspberry pi boots
 
 ```bash
-cd /home/pi/interfon-whatsapp
+cd /home/pi/interphone-telegram-whatsapp
 pm2 start index.js --name interphone --restart-delay 5000
 pm2 startup
 pm2 save
