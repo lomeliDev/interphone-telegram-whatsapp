@@ -15,8 +15,8 @@ if (( $EUID != 0 )); then
     exit 1
 fi
 
-if [ -z "$3" ]; then
-    echo "./install.sh <your_authtoken> <your_port_api> <your_endpoint>"
+if [ -z "$5" ]; then
+    echo "./install.sh <your_authtoken> <your_port_api> <your_endpoint> <your_user> <your_password>"
     exit 1
 fi
 
@@ -26,6 +26,8 @@ cp ngrok.yml /opt/ngrok
 sed -i "s/<add_your_token_here>/$1/g" /opt/ngrok/ngrok.yml
 sed -i "s/<add_your_port_api_here>/$2/g" /opt/ngrok/ngrok.yml
 sed -i "s/<add_your_endpoint_here>/$3/g" /opt/ngrok/ngrok.yml
+sed -i "s/<add_your_user_here>/$4/g" /opt/ngrok/ngrok.yml
+sed -i "s/<add_your_password_here>/$5/g" /opt/ngrok/ngrok.yml
 
 cd /opt/ngrok
 wget https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-linux-arm.zip

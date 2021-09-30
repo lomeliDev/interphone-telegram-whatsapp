@@ -2,5 +2,5 @@
 
 ```
     sudo chmod +x install.sh
-    sudo ./install.sh <your_authtoken> <your_port_api> <your_endpoint>
+    sudo ./install.sh <your_authtoken> <your_port_api> <your_endpoint> <your_user> <your_password>
 ```
