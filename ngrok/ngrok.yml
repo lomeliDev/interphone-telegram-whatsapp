@@ -1,0 +1,7 @@
+authtoken: <add_your_token_here>
+tunnels:
+  api-http:
+    addr: <add_your_port_api_here>
+    proto: http
+    hostname: <add_your_endpoint_here>
+    bind_tls: true

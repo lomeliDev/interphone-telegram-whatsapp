@@ -223,15 +223,15 @@ class TelegramController {
 
     async redirect(ctx) {
         if (Date.now() > this.lastReceived || this.lastReceived == 0) {
-            let urlRedirect = `${this._config.URL_HOST}:${this._config.PORT_PROXY}/`;
+            let urlRedirect = `${this._config.URL_HOST}/`;
             try {
                 if (this._config.CAMERA === "ESP32") {
-                    urlRedirect = `${this._config.URL_HOST}:${this._config.PORT_PROXY}/http://${this._config.HOST_CAMERA}/mjpeg/1`;
+                    urlRedirect = `${this._config.URL_HOST}/http://${this._config.HOST_CAMERA}/mjpeg/1`;
                 } else if (this._config.CAMERA === "NATIVE") {
-                    urlRedirect = `${this._config.URL_HOST}:${this._config.PORT_PROXY}/http://127.0.0.1:${this._config.PORT_API}/stream/stream.mjpg`;
+                    urlRedirect = `${this._config.URL_HOST}/http://127.0.0.1:${this._config.PORT_API}/stream/stream.mjpg`;
                 }
             } catch (error) {
-                urlRedirect = `${this._config.URL_HOST}:${this._config.PORT_PROXY}/`;
+                urlRedirect = `${this._config.URL_HOST}/`;
             }
             ctx.reply(urlRedirect);
         }
